@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carousel Generator</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&family=Playfair+Display:wght@400;600&family=Source+Sans+3:wght@300;400;500&family=Space+Grotesk:wght@400;500;600&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&family=Bitter:wght@400;600&family=JetBrains+Mono:wght@400;500&display=swap');
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -204,6 +204,333 @@
       border-radius: 4px;
       padding: 2px 8px;
       font-size: 0.8rem;
+    }
+
+    /* ========================================
+       Phase 2: Theme Definitions
+       ======================================== */
+
+    /* Default / Editorial theme */
+    .slide-canvas {
+      --slide-bg: #FAF8F4;
+      --slide-accent: #C8A96E;
+      --slide-heading-color: #1A1714;
+      --slide-body-color: #4A4540;
+      --slide-muted: #9E8C6A;
+      --slide-border: #D0CCC4;
+      --slide-font-heading: 'Lora', serif;
+      --slide-font-body: 'Inter', sans-serif;
+    }
+
+    .slide-canvas[data-theme="nature"] {
+      --slide-bg: #F2F5EE;
+      --slide-accent: #6A8A5A;
+      --slide-heading-color: #1A2E14;
+      --slide-body-color: #3A4A34;
+      --slide-muted: #7A9A6A;
+      --slide-border: #C8D4C0;
+      --slide-font-heading: 'Bitter', serif;
+      --slide-font-body: 'Source Sans 3', sans-serif;
+    }
+
+    .slide-canvas[data-theme="deep-space"] {
+      --slide-bg: #0E0F14;
+      --slide-accent: #4A9EFF;
+      --slide-heading-color: #E8ECF2;
+      --slide-body-color: #A0A8B8;
+      --slide-muted: #5A6478;
+      --slide-border: #1E2230;
+      --slide-font-heading: 'Space Grotesk', sans-serif;
+      --slide-font-body: 'Inter', sans-serif;
+    }
+
+    .slide-canvas[data-theme="minimal"] {
+      --slide-bg: #FFFFFF;
+      --slide-accent: #1A1A1A;
+      --slide-heading-color: #1A1A1A;
+      --slide-body-color: #4A4A4A;
+      --slide-muted: #8A8A8A;
+      --slide-border: #E0E0E0;
+      --slide-font-heading: 'DM Sans', sans-serif;
+      --slide-font-body: 'DM Sans', sans-serif;
+    }
+
+    .slide-canvas[data-theme="sunset"] {
+      --slide-bg: #FBF3E8;
+      --slide-accent: #C4602A;
+      --slide-heading-color: #2A1A0A;
+      --slide-body-color: #5A4030;
+      --slide-muted: #A07850;
+      --slide-border: #D8C8B0;
+      --slide-font-heading: 'Playfair Display', serif;
+      --slide-font-body: 'Source Sans 3', sans-serif;
+    }
+
+    .slide-canvas[data-theme="ocean"] {
+      --slide-bg: #F0F4F7;
+      --slide-accent: #2A8A8A;
+      --slide-heading-color: #0A2A2A;
+      --slide-body-color: #2A4A4A;
+      --slide-muted: #5A8A8A;
+      --slide-border: #C0D4D4;
+      --slide-font-heading: 'DM Sans', sans-serif;
+      --slide-font-body: 'Inter', sans-serif;
+    }
+
+    .slide-canvas[data-theme="botanical-dark"] {
+      --slide-bg: #0D1F0F;
+      --slide-accent: #D4C9A8;
+      --slide-heading-color: #F2EFE4;
+      --slide-body-color: #C8C0A8;
+      --slide-muted: #8A8A6A;
+      --slide-border: #1A3A1A;
+      --slide-font-heading: 'Playfair Display', serif;
+      --slide-font-body: 'Source Sans 3', sans-serif;
+    }
+
+    .slide-canvas[data-theme="tech"] {
+      --slide-bg: #111418;
+      --slide-accent: #00D4AA;
+      --slide-heading-color: #E0E8F0;
+      --slide-body-color: #A0B0C0;
+      --slide-muted: #5A6A7A;
+      --slide-border: #1A2028;
+      --slide-font-heading: 'JetBrains Mono', monospace;
+      --slide-font-body: 'Space Grotesk', sans-serif;
+    }
+
+    /* ========================================
+       Phase 2: Theme Swatch Picker
+       ======================================== */
+
+    .theme-picker-row {
+      display: flex;
+      gap: 16px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-bottom: 16px;
+    }
+
+    .theme-picker-row::-webkit-scrollbar {
+      display: none;
+    }
+
+    @media (max-width: 480px) {
+      .theme-picker-row {
+        mask-image: linear-gradient(to right, black 85%, transparent);
+        -webkit-mask-image: linear-gradient(to right, black 85%, transparent);
+      }
+    }
+
+    .theme-swatch {
+      width: 48px;
+      border-radius: 6px;
+      overflow: hidden;
+      display: flex;
+      flex-wrap: wrap;
+      flex-direction: column;
+      align-items: center;
+      border: 1.5px solid #D0CCC4;
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+      flex-shrink: 0;
+    }
+
+    .theme-swatch:hover {
+      border-color: #9E8C6A;
+      filter: brightness(1.05);
+    }
+
+    .theme-swatch.selected {
+      border: 2.5px solid #C8A96E;
+    }
+
+    .theme-swatch:focus-visible {
+      outline: 2px solid #C8A96E;
+      outline-offset: 2px;
+    }
+
+    .swatch-half {
+      width: 50%;
+      height: 32px;
+    }
+
+    .swatch-label {
+      display: block;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      color: #4A4540;
+      margin-top: 4px;
+      text-align: center;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .theme-swatch.selected .swatch-label {
+      font-weight: 600;
+    }
+
+    /* ========================================
+       Phase 2: Carousel Viewport
+       ======================================== */
+
+    .carousel-container {
+      position: relative;
+    }
+
+    .carousel-viewport {
+      width: 420px;
+      height: 420px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      border: 0.5px solid #D0CCC4;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       Phase 2: Slide Frame (1080x1080)
+       ======================================== */
+
+    .slide-frame {
+      width: 1080px;
+      height: 1080px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: scale(0.389) translateX(60px);
+      transform-origin: top left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 82px 92px 78px;
+      background-color: var(--slide-bg);
+      opacity: 0;
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+
+    .slide-frame.active {
+      opacity: 1;
+      transform: scale(0.389) translateX(0);
+      pointer-events: auto;
+    }
+
+    .slide-frame.exit {
+      opacity: 0;
+      transform: scale(0.389) translateX(-60px);
+    }
+
+    /* ========================================
+       Phase 2: Slide Content
+       ======================================== */
+
+    .slide-top-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slide-badge {
+      font-size: 24px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--slide-muted);
+      font-family: var(--slide-font-body);
+    }
+
+    .slide-num {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--slide-muted);
+      letter-spacing: 0.06em;
+      font-family: var(--slide-font-body);
+    }
+
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 14px;
+    }
+
+    .slide-title {
+      font-family: var(--slide-font-heading);
+      font-size: 62px;
+      font-weight: 600;
+      line-height: 1.25;
+      color: var(--slide-heading-color);
+    }
+
+    .slide-type-cover .slide-title {
+      font-size: 72px;
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .slide-accent-rule {
+      width: 82px;
+      height: 5px;
+      background: var(--slide-accent);
+      border-radius: 2px;
+    }
+
+    .slide-canvas[data-theme="minimal"] .slide-accent-rule {
+      height: 1px;
+      border-radius: 0;
+    }
+
+    .slide-canvas[data-theme="deep-space"] .slide-accent-rule {
+      box-shadow: 0 0 8px rgba(74,158,255,0.4);
+    }
+
+    .slide-canvas[data-theme="tech"] .slide-accent-rule {
+      box-shadow: 0 0 8px rgba(0,212,170,0.4);
+    }
+
+    .slide-text {
+      font-size: 34px;
+      line-height: 1.7;
+      color: var(--slide-body-color);
+      font-family: var(--slide-font-body);
+      font-weight: 400;
+    }
+
+    .slide-cta-text {
+      font-size: 62px;
+      font-weight: 600;
+      color: var(--slide-heading-color);
+      font-family: var(--slide-font-heading);
+    }
+
+    /* Corner SVG decorations — Editorial only */
+    .slide-corner-tl,
+    .slide-corner-br {
+      display: none;
+    }
+
+    .slide-canvas[data-theme="editorial"] .slide-corner-tl,
+    .slide-canvas[data-theme="editorial"] .slide-corner-br {
+      display: block;
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      pointer-events: none;
+    }
+
+    .slide-corner-tl {
+      top: 0;
+      left: 0;
+    }
+
+    .slide-corner-br {
+      bottom: 0;
+      right: 0;
+      transform: rotate(180deg);
     }
   </style>
 </head>
