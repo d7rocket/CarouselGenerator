@@ -7,12 +7,12 @@
 
 ### Input
 
-- [ ] **INPUT-01**: User can drag and drop a `.md` file onto the app
-- [ ] **INPUT-02**: User can click to browse and upload a `.md` file
-- [ ] **INPUT-03**: App parses `## Slide N: Title` sections as individual slides (5–7 slides)
-- [ ] **INPUT-04**: App parses caption from `## Caption` section
-- [ ] **INPUT-05**: App parses hashtags from `## Hashtags` section
-- [ ] **INPUT-06**: App parses field/topic metadata from the header line
+- [x] **INPUT-01**: User can drag and drop a `.md` file onto the app
+- [x] **INPUT-02**: User can click to browse and upload a `.md` file
+- [x] **INPUT-03**: App parses `## Slide N: Title` sections as individual slides (5–7 slides)
+- [x] **INPUT-04**: App parses caption from `## Caption` section
+- [x] **INPUT-05**: App parses hashtags from `## Hashtags` section
+- [x] **INPUT-06**: App parses field/topic metadata from the header line
 
 ### Themes
 
@@ -73,12 +73,12 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INPUT-01 | Phase 1: Markdown Input & Parsing | Pending |
-| INPUT-02 | Phase 1: Markdown Input & Parsing | Pending |
-| INPUT-03 | Phase 1: Markdown Input & Parsing | Pending |
-| INPUT-04 | Phase 1: Markdown Input & Parsing | Pending |
-| INPUT-05 | Phase 1: Markdown Input & Parsing | Pending |
-| INPUT-06 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-01 | Phase 1: Markdown Input & Parsing | Complete |
+| INPUT-02 | Phase 1: Markdown Input & Parsing | Complete |
+| INPUT-03 | Phase 1: Markdown Input & Parsing | Complete |
+| INPUT-04 | Phase 1: Markdown Input & Parsing | Complete |
+| INPUT-05 | Phase 1: Markdown Input & Parsing | Complete |
+| INPUT-06 | Phase 1: Markdown Input & Parsing | Complete |
 | THEME-01 | Phase 2: Theme Selection & Preview | Pending |
 | THEME-02 | Phase 2: Theme Selection & Preview | Pending |
 | THEME-03 | Phase 2: Theme Selection & Preview | Pending |
