@@ -36,10 +36,10 @@ Declared values (must be multiples of 4):
 | md | 16px | Default element spacing, swatch row gap, dot nav bottom margin |
 | lg | 24px | Section gaps, results header bottom margin |
 | xl | 32px | Slide canvas internal padding (top/bottom) |
-| 2xl | 36px | Slide canvas internal padding (left/right) |
+| 2xl | 32px | General large spacing token |
 | 3xl | 48px | Corner SVG decoration size |
 
-Exceptions: 36px used for slide canvas horizontal padding (matching reference implementation exactly); 14px for slide body internal gap (matching reference). These are interior-to-slide-canvas values at the 1080px resolution, not app-level layout tokens. -18px for navigation arrow inset: half of 36px arrow button diameter, derived positioning value for centering arrow on carousel viewport edge.
+Exceptions: 36px -- slide canvas horizontal padding, hardcoded internal-canvas value matching reference implementation (solar_fuels_carousel_v2.html). Not a reusable spacing token. 14px for slide body internal gap (matching reference). These are interior-to-slide-canvas values at the 1080px resolution, not app-level layout tokens. -18px for navigation arrow inset: half of 36px arrow button diameter, derived positioning value for centering arrow on carousel viewport edge.
 
 ---
 
@@ -58,18 +58,17 @@ Exceptions: 36px used for slide canvas horizontal padding (matching reference im
 
 These values are at the 1080px native resolution. They display at ~0.389x in the preview viewport.
 
+Declared sizes (4 total): 24px, 34px, 62px, 72px. Declared weights (2 total): 400, 600.
+
 | Role | Size | Weight | Line Height | Font (varies by theme) |
 |------|------|--------|-------------|----------------------|
-| Badge (field tag) | 24px | 400 | 1.3 | var(--slide-font-body) |
-| Slide number | 26px | 400 | 1.3 | var(--slide-font-body) |
+| Label/metadata (badge, slide number) | 24px | 400 | 1.3 | var(--slide-font-body) |
 | Title (cover slide) | 72px | 400 italic | 1.2 | var(--slide-font-heading) |
-| Title (body slides) | 62px | 600 | 1.25 | var(--slide-font-heading) |
-| Title (CTA slide) | 62px | 600 | 1.25 | var(--slide-font-heading) |
-| Body text | 34px | 300 | 1.7 | var(--slide-font-body) |
-| CTA text | 38px | 400 | 1.6 | var(--slide-font-body) |
+| Title (body/CTA slides) | 62px | 600 | 1.25 | var(--slide-font-heading) |
+| Body text | 34px | 400 | 1.7 | var(--slide-font-body) |
 | Accent rule | 82px wide, 5px tall | -- | -- | -- |
 
-Rationale: The reference implementation uses 24px/28px titles and 13px body at 420px canvas. Scaling to 1080px (2.571x factor) gives ~62px/72px and ~34px. Values rounded to clean numbers.
+Rationale: The reference implementation uses 24px/28px titles and 13px body at 420px canvas. Scaling to 1080px (2.571x factor) gives ~62px/72px and ~34px. Values rounded to clean numbers. Badge and slide number merged to 24px as they serve the same secondary-metadata role. CTA slide uses the 62px title element for its message, so no separate CTA text size is needed.
 
 ### Swatch Picker Typography
 
@@ -218,32 +217,31 @@ Rationale: Corner SVGs are Editorial-specific (matching the reference implementa
 
 | Element | Style |
 |---------|-------|
-| Field badge | Top-left, uppercase, letter-spacing 0.14em, var(--slide-muted) color |
-| Slide number | Top-right, "01 -- 06" format, var(--slide-muted) color |
+| Field badge | Top-left, 24px, uppercase, letter-spacing 0.14em, weight 400, var(--slide-muted) color |
+| Slide number | Top-right, 24px, "01 -- 06" format, weight 400, var(--slide-muted) color |
 | Title | Centered vertically in body area, 72px, italic weight 400, var(--slide-heading-color) |
 | Accent rule | Below title, 82px x 5px, var(--slide-accent) |
-| Body text | Short hook text below accent rule, 34px weight 300 |
+| Body text | Short hook text below accent rule, 34px weight 400 |
 | Corner SVG | Only for Editorial theme (conditional on data-theme="editorial") |
 
 ### Body Slides (index 1 through N-2)
 
 | Element | Style |
 |---------|-------|
-| Field badge | Top-left, same as cover |
-| Slide number | Top-right, same as cover |
+| Field badge | Top-left, 24px, same as cover |
+| Slide number | Top-right, 24px, same as cover |
 | Title | 62px, weight 600, var(--slide-heading-color) |
 | Accent rule | Below title, 82px x 5px, var(--slide-accent) |
-| Body text | Below accent rule, 34px weight 300, line-height 1.7, var(--slide-body-color) |
+| Body text | Below accent rule, 34px weight 400, line-height 1.7, var(--slide-body-color) |
 
 ### CTA Slide (last slide, index N-1)
 
 | Element | Style |
 |---------|-------|
-| Field badge | Top-left, same as cover |
-| Slide number | Top-right, same as cover |
-| Title | 62px, weight 600, var(--slide-heading-color) |
+| Field badge | Top-left, 24px, same as cover |
+| Slide number | Top-right, 24px, same as cover |
+| Title | 62px, weight 600, var(--slide-heading-color). Uses slide CTA text if present, otherwise defaults to "Follow for daily science drops." |
 | Accent rule | Below title, 82px x 5px, var(--slide-accent) |
-| CTA text | Below accent rule, 38px weight 400, var(--slide-body-color). Uses slide body text if present, otherwise defaults to "Follow for daily science drops." |
 
 ---
 
@@ -312,6 +310,8 @@ Vertical sequence within the `#results` container, top to bottom:
 4. **Navigation bar** -- dots (left) + slide counter (right) in a flex row -- 24px bottom margin
 5. **Caption section** -- "Caption" heading + caption-block -- 16px bottom margin
 6. **Hashtags section** -- "Hashtags" heading + hashtag pills
+
+Visual focal point: the carousel viewport is the primary visual anchor of the results view.
 
 Items 1, 5, and 6 reuse existing Phase 1 CSS classes: `.results-header`, `.filename-pill`, `.upload-new-link`, `.caption-block`, `.hashtags-container`, `.hashtag-pill`.
 
