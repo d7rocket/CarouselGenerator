@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carousel Generator</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #FAF8F4;
+      font-family: 'Inter', sans-serif;
+      color: #4A4540;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .app-title {
+      font-family: 'Lora', serif;
+      color: #1A1714;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .app-subtitle {
+      font-size: 0.85rem;
+      color: #9E8C6A;
+      text-align: center;
+      margin-top: -1rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.03em;
+    }
+
+    /* Upload Zone */
+    .upload-zone {
+      border: 2px dashed #D0CCC4;
+      border-radius: 12px;
+      padding: 3rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .upload-zone:hover,
+    .upload-zone.dragover {
+      border-color: #C8A96E;
+      background: #F5F0E8;
+    }
+
+    .upload-zone svg {
+      display: block;
+      margin: 0 auto 1rem;
+    }
+
+    .upload-zone .upload-text {
+      font-size: 0.95rem;
+      color: #4A4540;
+      margin-bottom: 0.5rem;
+    }
+
+    .upload-zone .browse-link {
+      color: #C8A96E;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    /* Results Area */
+    #results {
+      display: none;
+    }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+    }
+
+    .filename-pill {
+      background: #F5F0E8;
+      color: #9E8C6A;
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 0.8rem;
+      letter-spacing: 0.02em;
+    }
+
+    .upload-new-link {
+      color: #C8A96E;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.85rem;
+      background: none;
+      border: none;
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* Metadata Row */
+    .metadata-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      color: #9E8C6A;
+    }
+
+    .metadata-row .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .metadata-row .meta-label {
+      font-weight: 500;
+      color: #4A4540;
+    }
+
+    .metadata-row .meta-divider {
+      width: 1px;
+      height: 14px;
+      background: #D0CCC4;
+    }
+
+    /* Section Headings */
+    .section-heading {
+      font-family: 'Lora', serif;
+      font-size: 1rem;
+      color: #1A1714;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .section-heading .count {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 0.85rem;
+      color: #9E8C6A;
+    }
+
+    /* Slide Cards */
+    .slide-card {
+      background: white;
+      border: 0.5px solid #D0CCC4;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .slide-number-badge {
+      font-size: 0.75rem;
+      color: #9E8C6A;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .slide-card-title {
+      font-family: 'Lora', serif;
+      font-size: 1.1rem;
+      color: #1A1714;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+
+    .slide-card-body {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #4A4540;
+    }
+
+    /* Caption */
+    .caption-block {
+      border-left: 3px solid #C8A96E;
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #4A4540;
+      background: #FDFCFA;
+      border-radius: 0 4px 4px 0;
+    }
+
+    /* Hashtags */
+    .hashtags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .hashtag-pill {
+      background: #F5F0E8;
+      color: #9E8C6A;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="app-title">Carousel Generator</h1>
+    <p class="app-subtitle">Upload your markdown to preview slides</p>
+
+    <div id="uploadZone" class="upload-zone">
+      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M24 32V16M24 16L18 22M24 16L30 22" stroke="#C8A96E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8 30V36C8 37.1046 8.89543 38 10 38H38C39.1046 38 40 37.1046 40 36V30" stroke="#D0CCC4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <p class="upload-text">Drag and drop your .md file here</p>
+      <span class="browse-link">or browse files</span>
+    </div>
+    <input type="file" id="fileInput" accept=".md,.txt" style="display:none">
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    // ========================================
+    // Part 1: File Handling (INPUT-01, INPUT-02)
+    // ========================================
+    const uploadZone = document.getElementById('uploadZone');
+    const fileInput = document.getElementById('fileInput');
+
+    uploadZone.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      uploadZone.classList.add('dragover');
+    });
+
+    uploadZone.addEventListener('dragleave', function() {
+      uploadZone.classList.remove('dragover');
+    });
+
+    uploadZone.addEventListener('drop', function(e) {
+      e.preventDefault();
+      uploadZone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      handleFile(file);
+    });
+
+    uploadZone.addEventListener('click', function() {
+      fileInput.click();
+    });
+
+    fileInput.addEventListener('change', function() {
+      const file = fileInput.files[0];
+      handleFile(file);
+    });
+
+    function handleFile(file) {
+      if (!file) return;
+      if (!file.name.endsWith('.md') && !file.name.endsWith('.txt')) {
+        alert('Please upload a .md or .txt file.');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function() {
+        const parsed = parseMarkdown(reader.result);
+        renderResults(parsed, file.name);
+      };
+      reader.readAsText(file);
+    }
+
+    // ========================================
+    // Part 2: Markdown Parser (INPUT-03 to INPUT-06)
+    // ========================================
+    function parseMarkdown(text) {
+      const lines = text.split('\n');
+
+      // Title: first line starting with "# " (not "## ")
+      const titleLine = lines.find(function(l) { return /^# /.test(l); });
+      const title = titleLine ? titleLine.replace(/^# /, '').trim() : '';
+
+      // Metadata line containing **Date:**
+      const metaLine = lines.find(function(l) { return l.includes('**Date:**'); }) || '';
+      const dateMatch = metaLine.match(/\*\*Date:\*\*\s*([^|]+)/);
+      const fieldMatch = metaLine.match(/\*\*Field:\*\*\s*([^|]+)/);
+      const sourcesMatch = metaLine.match(/\*\*Sources:\*\*\s*(\d+)/);
+      const date = dateMatch ? dateMatch[1].trim() : '';
+      const field = fieldMatch ? fieldMatch[1].trim() : '';
+      const sourcesCount = sourcesMatch ? parseInt(sourcesMatch[1], 10) : 0;
+
+      // Split by ## sections
+      const sections = text.split(/\n## /);
+      const slides = [];
+      let caption = '';
+      let hashtags = [];
+      let sources = [];
+      let images = [];
+
+      for (let i = 1; i < sections.length; i++) {
+        const section = sections[i];
+        const firstNewline = section.indexOf('\n');
+        const header = firstNewline > -1 ? section.substring(0, firstNewline).trim() : section.trim();
+        const body = firstNewline > -1 ? section.substring(firstNewline + 1).trim() : '';
+
+        const slideMatch = header.match(/^Slide\s+(\d+):\s*(.+)/);
+        if (slideMatch) {
+          slides.push({
+            number: parseInt(slideMatch[1], 10),
+            title: slideMatch[2].trim(),
+            body: body.replace(/\n---\s*$/, '').trim()
+          });
+        } else if (header.startsWith('Caption')) {
+          caption = body.replace(/\n---\s*$/, '').trim();
+        } else if (header.startsWith('Hashtags')) {
+          const hashBody = body.replace(/\n---\s*$/, '').trim();
+          hashtags = hashBody.split(/\s+/).filter(function(s) { return s.startsWith('#'); });
+        } else if (header.startsWith('Sources')) {
+          const srcBody = body.replace(/\n---\s*$/, '').trim();
+          sources = srcBody.split(/(?=^\d+\.\s)/m).map(function(s) { return s.trim(); }).filter(Boolean);
+        } else if (header.startsWith('Images')) {
+          const imgBody = body.replace(/\n---\s*$/, '').trim();
+          const urlMatches = imgBody.match(/https?:\/\/[^\s]+/g);
+          images = urlMatches || [];
+        }
+      }
+
+      return {
+        title: title,
+        date: date,
+        field: field,
+        sourcesCount: sourcesCount,
+        slides: slides,
+        caption: caption,
+        hashtags: hashtags,
+        sources: sources,
+        images: images
+      };
+    }
+
+    // ========================================
+    // Part 3: Results Rendering
+    // ========================================
+    function renderResults(parsed, filename) {
+      uploadZone.style.display = 'none';
+      const results = document.getElementById('results');
+      results.style.display = 'block';
+
+      // Build DOM safely using createElement/textContent
+      results.textContent = '';
+
+      // Header row
+      var header = document.createElement('div');
+      header.className = 'results-header';
+      var pill = document.createElement('span');
+      pill.className = 'filename-pill';
+      pill.textContent = filename;
+      header.appendChild(pill);
+      var newBtn = document.createElement('button');
+      newBtn.className = 'upload-new-link';
+      newBtn.textContent = 'Upload new file';
+      newBtn.addEventListener('click', function() {
+        uploadZone.style.display = '';
+        results.style.display = 'none';
+        results.textContent = '';
+        fileInput.value = '';
+      });
+      header.appendChild(newBtn);
+      results.appendChild(header);
+
+      // Metadata row
+      var metaRow = document.createElement('div');
+      metaRow.className = 'metadata-row';
+      if (parsed.date) {
+        var dateItem = document.createElement('div');
+        dateItem.className = 'meta-item';
+        var dateLabel = document.createElement('span');
+        dateLabel.className = 'meta-label';
+        dateLabel.textContent = 'Date';
+        dateItem.appendChild(dateLabel);
+        var dateVal = document.createTextNode(' ' + parsed.date);
+        dateItem.appendChild(dateVal);
+        metaRow.appendChild(dateItem);
+        var div1 = document.createElement('div');
+        div1.className = 'meta-divider';
+        metaRow.appendChild(div1);
+      }
+      if (parsed.field) {
+        var fieldItem = document.createElement('div');
+        fieldItem.className = 'meta-item';
+        var fieldLabel = document.createElement('span');
+        fieldLabel.className = 'meta-label';
+        fieldLabel.textContent = 'Field';
+        fieldItem.appendChild(fieldLabel);
+        var fieldVal = document.createTextNode(' ' + parsed.field);
+        fieldItem.appendChild(fieldVal);
+        metaRow.appendChild(fieldItem);
+        var div2 = document.createElement('div');
+        div2.className = 'meta-divider';
+        metaRow.appendChild(div2);
+      }
+      var srcItem = document.createElement('div');
+      srcItem.className = 'meta-item';
+      var srcLabel = document.createElement('span');
+      srcLabel.className = 'meta-label';
+      srcLabel.textContent = 'Sources';
+      srcItem.appendChild(srcLabel);
+      var srcVal = document.createTextNode(' ' + parsed.sourcesCount);
+      srcItem.appendChild(srcVal);
+      metaRow.appendChild(srcItem);
+      results.appendChild(metaRow);
+
+      // Slides section heading
+      var slidesHeading = document.createElement('div');
+      slidesHeading.className = 'section-heading';
+      slidesHeading.textContent = 'Slides ';
+      var slidesCount = document.createElement('span');
+      slidesCount.className = 'count';
+      slidesCount.textContent = '(' + parsed.slides.length + ')';
+      slidesHeading.appendChild(slidesCount);
+      results.appendChild(slidesHeading);
+
+      // Slide cards
+      parsed.slides.forEach(function(slide) {
+        var card = document.createElement('div');
+        card.className = 'slide-card';
+        var badge = document.createElement('div');
+        badge.className = 'slide-number-badge';
+        badge.textContent = 'Slide ' + slide.number;
+        card.appendChild(badge);
+        var cardTitle = document.createElement('div');
+        cardTitle.className = 'slide-card-title';
+        cardTitle.textContent = slide.title;
+        card.appendChild(cardTitle);
+        var cardBody = document.createElement('div');
+        cardBody.className = 'slide-card-body';
+        cardBody.textContent = slide.body;
+        card.appendChild(cardBody);
+        results.appendChild(card);
+      });
+
+      // Caption section
+      if (parsed.caption) {
+        var capHeading = document.createElement('div');
+        capHeading.className = 'section-heading';
+        capHeading.textContent = 'Caption';
+        results.appendChild(capHeading);
+        var capBlock = document.createElement('div');
+        capBlock.className = 'caption-block';
+        // Preserve line breaks in caption
+        parsed.caption.split('\n').forEach(function(line, idx) {
+          if (idx > 0) capBlock.appendChild(document.createElement('br'));
+          capBlock.appendChild(document.createTextNode(line));
+        });
+        results.appendChild(capBlock);
+      }
+
+      // Hashtags section
+      if (parsed.hashtags.length > 0) {
+        var tagHeading = document.createElement('div');
+        tagHeading.className = 'section-heading';
+        tagHeading.textContent = 'Hashtags';
+        results.appendChild(tagHeading);
+        var tagContainer = document.createElement('div');
+        tagContainer.className = 'hashtags-container';
+        parsed.hashtags.forEach(function(tag) {
+          var tagPill = document.createElement('span');
+          tagPill.className = 'hashtag-pill';
+          tagPill.textContent = tag;
+          tagContainer.appendChild(tagPill);
+        });
+        results.appendChild(tagContainer);
+      }
+    }
+  </script>
+</body>
+</html>
