@@ -340,6 +340,122 @@
     }
 
     // ========================================
+    // Parser Tests (auto-run on page load)
+    // ========================================
+    function runParserTests() {
+      const testMarkdown = `# Solar Fuel Conversion: Quantum Shortcuts to Clean Energy
+
+**Date:** 2026-03-16 | **Field:** Materials Science | **Sources:** 4
+
+---
+
+## Slide 1: Sunlight's Hidden Fuel Problem
+
+What if clean energy was trapped inside a nitrogen ring? ☀️
+
+## Slide 2: More Energy Than We Can Use
+
+The Sun delivers enough energy every hour to power Earth for a year. The problem isn't supply — it's conversion. Scientists have chased artificial photosynthesis (mimicking how plants turn light into energy) for decades, but one key piece was missing.
+
+## Slide 3: The Material That Acts Like a Leaf
+
+Polyheptazine imides (layered nitrogen-rich sheets, like graphene's chemistry-obsessed cousin) absorb visible light and drive reactions — splitting water into hydrogen or converting CO₂ into fuel. But with thousands of possible metal combinations to test, nobody knew which ones would actually work.
+
+## Slide 4: 53 Metals, One Quantum Map
+
+A team used many-body perturbation theory (quantum math tracking how electrons push and pull each other) to model 53 metals inside these materials. They built a predictive framework — a recipe book for solar fuel catalysts. But did the predictions hold up in the real world?
+
+## Slide 5: The Lab Confirmed the Math
+
+They synthesized eight materials based on computational predictions. Metals tucked between molecular layers dramatically boosted charge separation (the splitting of charges that powers the reaction). Theory and experiment aligned — and that opens a door nobody expected.
+
+## Slide 6: Solar Fuels Just Got a Shortcut
+
+Designing photocatalysts (light-powered reaction drivers) no longer requires years of trial and error. The quantum roadmap is here. Follow for daily science drops. 🔬
+
+---
+
+## Caption
+
+What happens when solar fuel research gets a quantum shortcut? One team just built the design guide — and proved it works.
+
+The Sun gives us more energy per hour than all of humanity uses in a year. The catch is storing it.
+
+---
+
+## Hashtags
+
+#SolarFuel #PhotocatalystDesign #CleanEnergy #ArtificialPhotosynthesis #ScienceExplained
+
+---
+
+## Sources
+
+1. Hajiahmadi, Z. et al. (2026). Theory-Guided Discovery. DOI: https://doi.org/10.1021/jacs.5c09930
+
+---
+
+## Images
+
+- https://www.sciencedaily.com/images/1920/silver-doped-polyheptazine-imide-polymeric-network.webp`;
+
+      const result = parseMarkdown(testMarkdown);
+      const errors = [];
+
+      if (result.title !== 'Solar Fuel Conversion: Quantum Shortcuts to Clean Energy')
+        errors.push('title mismatch: got "' + result.title + '"');
+      if (result.date.trim() !== '2026-03-16')
+        errors.push('date mismatch: got "' + result.date + '"');
+      if (result.field.trim() !== 'Materials Science')
+        errors.push('field mismatch: got "' + result.field + '"');
+      if (result.sourcesCount !== 4)
+        errors.push('sourcesCount mismatch: got ' + result.sourcesCount);
+      if (result.slides.length !== 6)
+        errors.push('slides count mismatch: got ' + result.slides.length);
+      if (result.slides.length > 0 && result.slides[0].title !== "Sunlight's Hidden Fuel Problem")
+        errors.push('slide 1 title mismatch: got "' + result.slides[0].title + '"');
+      if (result.slides.length > 0 && result.slides[0].number !== 1)
+        errors.push('slide 1 number mismatch: got ' + result.slides[0].number);
+      if (result.slides.length > 2 && !result.slides[2].body.includes('Polyheptazine imides'))
+        errors.push('slide 3 body missing expected content');
+      if (!result.caption.includes('quantum shortcut'))
+        errors.push('caption missing expected content');
+      if (result.hashtags.length !== 5)
+        errors.push('hashtags count mismatch: got ' + result.hashtags.length);
+      if (!result.hashtags.includes('#SolarFuel'))
+        errors.push('hashtags missing #SolarFuel');
+      if (result.sources.length < 1)
+        errors.push('sources empty');
+      if (result.images.length !== 1)
+        errors.push('images count mismatch: got ' + result.images.length);
+      if (result.images.length > 0 && !result.images[0].includes('sciencedaily.com'))
+        errors.push('images[0] missing expected URL');
+
+      // Edge case: missing sections should return empty arrays
+      const minimalMarkdown = '# Test Title\n\n**Date:** 2026-01-01 | **Field:** Test | **Sources:** 0\n\n---\n\n## Slide 1: Only Slide\n\nBody text here.';
+      const minResult = parseMarkdown(minimalMarkdown);
+      if (!Array.isArray(minResult.sources) || minResult.sources.length !== 0)
+        errors.push('edge case: missing Sources section should return empty array');
+      if (!Array.isArray(minResult.images) || minResult.images.length !== 0)
+        errors.push('edge case: missing Images section should return empty array');
+      if (minResult.caption !== '')
+        errors.push('edge case: missing Caption section should return empty string');
+      if (minResult.hashtags.length !== 0)
+        errors.push('edge case: missing Hashtags section should return empty array');
+
+      if (errors.length === 0) {
+        console.log('PARSER TESTS: ALL PASSED');
+      } else {
+        console.error('PARSER TESTS FAILED:');
+        errors.forEach(function(e) { console.error('  - ' + e); });
+      }
+      return errors;
+    }
+
+    // Auto-run parser tests on page load
+    runParserTests();
+
+    // ========================================
     // Part 3: Results Rendering
     // ========================================
     function renderResults(parsed, filename) {
