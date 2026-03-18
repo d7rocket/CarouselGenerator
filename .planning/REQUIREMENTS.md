@@ -73,17 +73,30 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| INPUT-01 through INPUT-06 | Phase 1 | Pending |
-| THEME-01 through THEME-03 | Phase 2 | Pending |
-| PREV-01 through PREV-03 | Phase 2 | Pending |
-| EXPORT-01 through EXPORT-04 | Phase 3 | Pending |
-| COPY-01 through COPY-02 | Phase 3 | Pending |
+| INPUT-01 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-02 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-03 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-04 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-05 | Phase 1: Markdown Input & Parsing | Pending |
+| INPUT-06 | Phase 1: Markdown Input & Parsing | Pending |
+| THEME-01 | Phase 2: Theme Selection & Preview | Pending |
+| THEME-02 | Phase 2: Theme Selection & Preview | Pending |
+| THEME-03 | Phase 2: Theme Selection & Preview | Pending |
+| PREV-01 | Phase 2: Theme Selection & Preview | Pending |
+| PREV-02 | Phase 2: Theme Selection & Preview | Pending |
+| PREV-03 | Phase 2: Theme Selection & Preview | Pending |
+| EXPORT-01 | Phase 3: Export & Copy | Pending |
+| EXPORT-02 | Phase 3: Export & Copy | Pending |
+| EXPORT-03 | Phase 3: Export & Copy | Pending |
+| EXPORT-04 | Phase 3: Export & Copy | Pending |
+| COPY-01 | Phase 3: Export & Copy | Pending |
+| COPY-02 | Phase 3: Export & Copy | Pending |
 
 **Coverage:**
-- v1 requirements: 19 total
-- Mapped to phases: 19
-- Unmapped: 0 ✓
+- v1 requirements: 18 total
+- Mapped to phases: 18
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-18*
-*Last updated: 2026-03-18 after initial definition*
+*Last updated: 2026-03-18 after roadmap creation*
