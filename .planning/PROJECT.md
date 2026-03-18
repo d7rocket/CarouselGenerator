@@ -12,17 +12,16 @@ Upload a markdown file → pick a theme → download print-ready 1080×1080 PNGs
 
 ### Validated
 
-(None yet — ship to validate)
+- [x] User can drag/drop or upload a `.md` file matching the defined format — Validated in Phase 01: markdown-input-and-parsing
+- [x] App parses slides from `## Slide N: Title` structure (5–7 slides) — Validated in Phase 01: markdown-input-and-parsing
+- [x] Caption and hashtags parsed from markdown and copyable — Validated in Phase 01: markdown-input-and-parsing
 
 ### Active
 
-- [ ] User can drag/drop or upload a `.md` file matching the defined format
-- [ ] App parses slides from `## Slide N: Title` structure (5–7 slides)
 - [ ] User can choose from multiple visual themes (6–8 options)
 - [ ] User can preview the carousel in-browser
 - [ ] User can download each slide as a 1080×1080 PNG
 - [ ] User can download all slides as a ZIP
-- [ ] Caption and hashtags parsed from markdown and copyable
 
 ### Out of Scope
 
@@ -69,4 +68,4 @@ Upload a markdown file → pick a theme → download print-ready 1080×1080 PNGs
 | 8 preset themes | User wants variety without a custom editor | — Pending |
 
 ---
-*Last updated: 2026-03-18 after initialization*
+*Last updated: 2026-03-18 — Phase 01 complete: upload UI + markdown parser shipped*
