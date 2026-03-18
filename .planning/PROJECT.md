@@ -16,10 +16,13 @@ Upload a markdown file → pick a theme → download print-ready 1080×1080 PNGs
 - [x] App parses slides from `## Slide N: Title` structure (5–7 slides) — Validated in Phase 01: markdown-input-and-parsing
 - [x] Caption and hashtags parsed from markdown and copyable — Validated in Phase 01: markdown-input-and-parsing
 
+### Validated
+
+- [x] User can choose from 8 visual themes — Validated in Phase 02: theme-selection-preview
+- [x] User can preview the carousel in-browser (1080×1080 scaled to 420px) — Validated in Phase 02: theme-selection-preview
+
 ### Active
 
-- [ ] User can choose from multiple visual themes (6–8 options)
-- [ ] User can preview the carousel in-browser
 - [ ] User can download each slide as a 1080×1080 PNG
 - [ ] User can download all slides as a ZIP
 
@@ -63,9 +66,9 @@ Upload a markdown file → pick a theme → download print-ready 1080×1080 PNGs
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Single HTML file | Matches existing workflow, no build tooling needed | — Pending |
-| html2canvas for export | Browser-native, no server required | — Pending |
-| 8 preset themes | User wants variety without a custom editor | — Pending |
+| Single HTML file | Matches existing workflow, no build tooling needed | Confirmed — all code in index.html |
+| html2canvas for export | Browser-native, no server required | — Pending (Phase 3) |
+| 8 preset themes | User wants variety without a custom editor | Shipped — all 8 themes live with CSS custom properties |
 
 ---
-*Last updated: 2026-03-18 — Phase 01 complete: upload UI + markdown parser shipped*
+*Last updated: 2026-03-19 — Phase 02 complete: 8 themes, swatch picker, carousel preview, navigation controls shipped*
