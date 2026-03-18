@@ -16,9 +16,9 @@
 
 ### Themes
 
-- [ ] **THEME-01**: User can select from 8 preset visual themes before export
-- [ ] **THEME-02**: Theme selection updates the preview in real-time
-- [ ] **THEME-03**: Each theme has distinct palette, typography, and accent style:
+- [x] **THEME-01**: User can select from 8 preset visual themes before export
+- [x] **THEME-02**: Theme selection updates the preview in real-time
+- [x] **THEME-03**: Each theme has distinct palette, typography, and accent style:
   - Editorial (cream + gold, Lora+Inter) — default
   - Nature/Botanical (sage + leaf green)
   - Deep Space (near-black + electric blue)
@@ -30,9 +30,9 @@
 
 ### Preview
 
-- [ ] **PREV-01**: App shows interactive carousel preview of all slides
+- [x] **PREV-01**: App shows interactive carousel preview of all slides
 - [ ] **PREV-02**: User can navigate between slides (prev/next)
-- [ ] **PREV-03**: Preview accurately reflects the final exported design
+- [x] **PREV-03**: Preview accurately reflects the final exported design
 
 ### Export
 
@@ -79,12 +79,12 @@
 | INPUT-04 | Phase 1: Markdown Input & Parsing | Complete |
 | INPUT-05 | Phase 1: Markdown Input & Parsing | Complete |
 | INPUT-06 | Phase 1: Markdown Input & Parsing | Complete |
-| THEME-01 | Phase 2: Theme Selection & Preview | Pending |
-| THEME-02 | Phase 2: Theme Selection & Preview | Pending |
-| THEME-03 | Phase 2: Theme Selection & Preview | Pending |
-| PREV-01 | Phase 2: Theme Selection & Preview | Pending |
+| THEME-01 | Phase 2: Theme Selection & Preview | Complete |
+| THEME-02 | Phase 2: Theme Selection & Preview | Complete |
+| THEME-03 | Phase 2: Theme Selection & Preview | Complete |
+| PREV-01 | Phase 2: Theme Selection & Preview | Complete |
 | PREV-02 | Phase 2: Theme Selection & Preview | Pending |
-| PREV-03 | Phase 2: Theme Selection & Preview | Pending |
+| PREV-03 | Phase 2: Theme Selection & Preview | Complete |
 | EXPORT-01 | Phase 3: Export & Copy | Pending |
 | EXPORT-02 | Phase 3: Export & Copy | Pending |
 | EXPORT-03 | Phase 3: Export & Copy | Pending |

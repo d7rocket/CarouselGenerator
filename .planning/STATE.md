@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: unknown
-stopped_at: Phase 2 context gathered
-last_updated: "2026-03-18T20:01:23.542Z"
+stopped_at: Completed 02-01-PLAN.md
+last_updated: "2026-03-18T20:46:34.132Z"
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 1
-  completed_plans: 1
+  total_plans: 3
+  completed_plans: 2
 ---
 
 # Project State
@@ -19,26 +19,27 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-18)
 
 **Core value:** Upload a markdown file, pick a theme, download print-ready 1080x1080 PNGs
-**Current focus:** Phase 01 — markdown-input-and-parsing
+**Current focus:** Phase 02 — theme-selection-preview
 
 ## Current Position
 
-Phase: 01 (markdown-input-and-parsing) — COMPLETE
-Plan: 1 of 1 (all complete)
+Phase: 02 (theme-selection-preview) — EXECUTING
+Plan: 2 of 2
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 1
+- Total plans completed: 2
 - Average duration: 3min
-- Total execution time: 0.05 hours
+- Total execution time: 0.1 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 1 | 3min | 3min |
+| 02 | 1 | 3min | 3min |
 
 **Recent Trend:**
 
@@ -46,6 +47,7 @@ Plan: 1 of 1 (all complete)
 - Trend: n/a
 
 *Updated after each plan completion*
+| Phase 02 P01 | 3min | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -58,6 +60,9 @@ Recent decisions affecting current work:
 - html2canvas or dom-to-image for client-side PNG export
 - 8 preset themes (no custom editor in v1)
 - [Phase 01]: Used safe DOM construction (createElement/textContent) instead of innerHTML for XSS prevention
+- [Phase 02]: CSS custom properties with data-theme attribute for instant theme switching
+- [Phase 02]: Corner SVGs always in DOM, hidden via CSS for non-editorial themes
+- [Phase 02]: 1080x1080 slide frames with transform scale(0.389) for preview fidelity
 
 ### Pending Todos
 
@@ -69,6 +74,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-03-18T20:01:23.530Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-theme-selection-preview/02-CONTEXT.md
+Last session: 2026-03-18T20:46:29.906Z
+Stopped at: Completed 02-01-PLAN.md
+Resume file: None
