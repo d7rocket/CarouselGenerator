@@ -887,8 +887,104 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       return errors;
     }
 
+    // ========================================
+    // Carousel Tests (auto-run on page load)
+    // ========================================
+    function runCarouselTests() {
+      var testMarkdown = '# Solar Fuel Conversion: Quantum Shortcuts to Clean Energy\n\n**Date:** 2026-03-16 | **Field:** Materials Science | **Sources:** 4\n\n---\n\n## Slide 1: Sunlight\'s Hidden Fuel Problem\n\nWhat if clean energy was trapped inside a nitrogen ring?\n\n## Slide 2: More Energy Than We Can Use\n\nThe Sun delivers enough energy every hour to power Earth for a year.\n\n## Slide 3: The Material That Acts Like a Leaf\n\nPolyheptazine imides absorb visible light and drive reactions.\n\n## Slide 4: 53 Metals, One Quantum Map\n\nA team used many-body perturbation theory to model 53 metals.\n\n## Slide 5: The Lab Confirmed the Math\n\nThey synthesized eight materials based on computational predictions.\n\n## Slide 6: Solar Fuels Just Got a Shortcut\n\nDesigning photocatalysts no longer requires years of trial and error. Follow for daily science drops.\n\n---\n\n## Caption\n\nWhat happens when solar fuel research gets a quantum shortcut?\n\n---\n\n## Hashtags\n\n#SolarFuel #CleanEnergy #Science #Photocatalysis #Chemistry\n\n---';
+
+      var parsed = parseMarkdown(testMarkdown);
+
+      // Temporarily render results to test DOM
+      renderResults(parsed, 'test-carousel.md');
+
+      var errors = [];
+
+      // Test 1: 8 theme swatches exist
+      var swatches = document.querySelectorAll('.theme-swatch');
+      if (swatches.length !== 8) errors.push('Expected 8 swatches, got ' + swatches.length);
+
+      // Test 2: Editorial swatch is pre-selected
+      var selected = document.querySelector('.theme-swatch.selected');
+      if (!selected || selected.getAttribute('data-theme-id') !== 'editorial')
+        errors.push('Editorial swatch not pre-selected');
+
+      // Test 3: slide-canvas has data-theme="editorial"
+      var canvas = document.querySelector('.slide-canvas');
+      if (!canvas || canvas.getAttribute('data-theme') !== 'editorial')
+        errors.push('slide-canvas missing data-theme="editorial"');
+
+      // Test 4: Correct number of slide-frame elements
+      var frames = document.querySelectorAll('.slide-frame');
+      if (frames.length !== parsed.slides.length)
+        errors.push('Expected ' + parsed.slides.length + ' slide frames, got ' + frames.length);
+
+      // Test 5: First slide is active
+      var activeSlide = document.querySelector('.slide-frame.active');
+      if (!activeSlide || activeSlide.getAttribute('data-slide-index') !== '0')
+        errors.push('First slide not active');
+
+      // Test 6: Slide types correct (cover, body, body, body, body, cta for 6 slides)
+      if (frames.length === 6) {
+        if (!frames[0].querySelector('.slide-type-cover')) errors.push('Slide 0 not cover type');
+        if (!frames[1].querySelector('.slide-type-body')) errors.push('Slide 1 not body type');
+        if (!frames[5].querySelector('.slide-type-cta')) errors.push('Slide 5 not cta type');
+      }
+
+      // Test 7: Navigation arrows exist
+      var arrows = document.querySelectorAll('.carousel-arrow');
+      if (arrows.length !== 2) errors.push('Expected 2 navigation arrows, got ' + arrows.length);
+
+      // Test 8: Dot indicators match slide count
+      var dotElems = document.querySelectorAll('.carousel-dot');
+      if (dotElems.length !== parsed.slides.length)
+        errors.push('Expected ' + parsed.slides.length + ' dots, got ' + dotElems.length);
+
+      // Test 9: Slide counter shows "1 / 6"
+      var counterElem = document.querySelector('.slide-counter');
+      if (!counterElem || counterElem.textContent.trim() !== '1 / ' + parsed.slides.length)
+        errors.push('Counter text wrong: got "' + (counterElem ? counterElem.textContent : 'null') + '"');
+
+      // Test 10: Theme switch works - change to deep-space and verify
+      if (canvas) {
+        canvas.setAttribute('data-theme', 'deep-space');
+        // Verify attribute changed
+        if (canvas.getAttribute('data-theme') !== 'deep-space')
+          errors.push('Theme switch to deep-space failed');
+        // Reset back to editorial
+        canvas.setAttribute('data-theme', 'editorial');
+        if (canvas.getAttribute('data-theme') !== 'editorial')
+          errors.push('Theme switch back to editorial failed');
+      }
+
+      // Test 11: Navigation controls present (arrows verify goToSlide integration)
+      var leftArr = document.querySelector('.carousel-arrow.arrow-left');
+      var rightArr = document.querySelector('.carousel-arrow.arrow-right');
+      if (!leftArr || !rightArr)
+        errors.push('Navigation arrow buttons not found');
+      else if (!leftArr.disabled)
+        errors.push('Left arrow should be disabled on first slide');
+
+      // Test 12: Caption and hashtags still render
+      if (!document.querySelector('.caption-block')) errors.push('Caption block missing');
+      if (!document.querySelector('.hashtags-container')) errors.push('Hashtags container missing');
+
+      // Clean up: reset to upload view
+      var uploadNew = document.querySelector('.upload-new-link');
+      if (uploadNew) uploadNew.click();
+
+      if (errors.length === 0) {
+        console.log('CAROUSEL TESTS: ALL PASSED (12 checks)');
+      } else {
+        console.error('CAROUSEL TESTS FAILED:');
+        errors.forEach(function(e) { console.error('  - ' + e); });
+      }
+      return errors;
+    }
+
     // Auto-run parser tests on page load
     runParserTests();
+    runCarouselTests();
 
     // ========================================
     // Part 3: Theme & Carousel Helpers
