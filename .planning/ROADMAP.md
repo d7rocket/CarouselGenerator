@@ -41,10 +41,11 @@ Plans:
   2. Selecting a theme immediately updates the slide preview without page reload
   3. User can navigate between slides using prev/next controls in the carousel preview
   4. The preview renders with the correct palette, typography, and accent style for each theme (matching the theme spec)
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Theme CSS definitions (8 palettes), swatch picker, and carousel viewport with 1080x1080 slide rendering
+- [ ] 02-02-PLAN.md — Carousel navigation controls (arrows, dots, keyboard, counter) and inline smoke tests
 
 ### Phase 3: Export & Copy
 **Goal**: Users can download their carousel as print-ready PNGs and copy companion text for Instagram posting
@@ -68,5 +69,5 @@ Phases execute in numeric order: 1 -> 2 -> 3
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Markdown Input & Parsing | 0/1 | Planning complete | - |
-| 2. Theme Selection & Preview | 0/? | Not started | - |
+| 2. Theme Selection & Preview | 0/2 | Planning complete | - |
 | 3. Export & Copy | 0/? | Not started | - |
