@@ -27,10 +27,10 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. User can click a file input to browse and select a `.md` file
   3. After upload, the app displays the correct number of parsed slides with their titles and body content
   4. Caption, hashtags, and field/topic metadata are extracted and accessible in the UI
-**Plans**: TBD
+**Plans**: 1 plan
 
 Plans:
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — Upload UI with drag-and-drop/file picker and markdown parser with inline validation tests
 
 ### Phase 2: Theme Selection & Preview
 **Goal**: Users can browse visual themes, select one, and preview their carousel exactly as it will appear when exported
@@ -67,6 +67,6 @@ Phases execute in numeric order: 1 -> 2 -> 3
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Markdown Input & Parsing | 0/? | Not started | - |
+| 1. Markdown Input & Parsing | 0/1 | Planning complete | - |
 | 2. Theme Selection & Preview | 0/? | Not started | - |
 | 3. Export & Copy | 0/? | Not started | - |
