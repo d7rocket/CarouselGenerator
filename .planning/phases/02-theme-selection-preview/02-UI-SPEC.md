@@ -31,15 +31,15 @@ Declared values (must be multiples of 4):
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| xs | 4px | Dot indicator gaps, inline icon padding |
-| sm | 8px | Swatch label margin, hashtag pill padding |
+| xs | 4px | Swatch label margin-top, inline icon padding |
+| sm | 8px | Swatch label margin, hashtag pill padding, dot indicator gap |
 | md | 16px | Default element spacing, swatch row gap, dot nav bottom margin |
-| lg | 24px | Carousel arrow inset from viewport edge, section gaps |
+| lg | 24px | Section gaps, results header bottom margin |
 | xl | 32px | Slide canvas internal padding (top/bottom) |
 | 2xl | 36px | Slide canvas internal padding (left/right) |
 | 3xl | 48px | Corner SVG decoration size |
 
-Exceptions: 36px used for slide canvas horizontal padding (matching reference implementation exactly); 5px for dot indicator gap (matching reference); 14px for slide body internal gap (matching reference). These are interior-to-slide-canvas values at the 1080px resolution, not app-level layout tokens.
+Exceptions: 36px used for slide canvas horizontal padding (matching reference implementation exactly); 14px for slide body internal gap (matching reference). These are interior-to-slide-canvas values at the 1080px resolution, not app-level layout tokens. -18px for navigation arrow inset: half of 36px arrow button diameter, derived positioning value for centering arrow on carousel viewport edge.
 
 ---
 
@@ -50,9 +50,9 @@ Exceptions: 36px used for slide canvas horizontal padding (matching reference im
 | Role | Size | Weight | Line Height | Font |
 |------|------|--------|-------------|------|
 | Body | 14px | 400 | 1.5 | Inter |
-| Label | 12px | 500 | 1.3 | Inter |
+| Label | 12px | 400 | 1.3 | Inter |
 | Heading | 24px | 600 | 1.25 | Lora |
-| Small | 11px | 400 | 1.3 | Inter |
+| Nav/Counter | 13px | 400 | 1.3 | Inter |
 
 ### Slide Canvas Typography (inside 1080x1080 div, at full resolution)
 
@@ -60,7 +60,7 @@ These values are at the 1080px native resolution. They display at ~0.389x in the
 
 | Role | Size | Weight | Line Height | Font (varies by theme) |
 |------|------|--------|-------------|----------------------|
-| Badge (field tag) | 24px | 500 | 1.3 | var(--slide-font-body) |
+| Badge (field tag) | 24px | 400 | 1.3 | var(--slide-font-body) |
 | Slide number | 26px | 400 | 1.3 | var(--slide-font-body) |
 | Title (cover slide) | 72px | 400 italic | 1.2 | var(--slide-font-heading) |
 | Title (body slides) | 62px | 600 | 1.25 | var(--slide-font-heading) |
@@ -75,8 +75,8 @@ Rationale: The reference implementation uses 24px/28px titles and 13px body at 4
 
 | Role | Size | Weight | Line Height | Font |
 |------|------|--------|-------------|------|
-| Swatch label (inactive) | 11px | 400 | 1.2 | Inter |
-| Swatch label (selected) | 11px | 600 | 1.2 | Inter |
+| Swatch label (inactive) | 12px | 400 | 1.2 | Inter |
+| Swatch label (selected) | 12px | 600 | 1.2 | Inter |
 
 ### Navigation Typography
 
@@ -183,6 +183,8 @@ Rationale: Corner SVGs are Editorial-specific (matching the reference implementa
 | Icon | Inline SVG chevron, 16px, stroke #4A4540, stroke-width 2 |
 | Left arrow position | `left: -18px`, `top: 50%`, `transform: translateY(-50%)` |
 | Right arrow position | `right: -18px`, `top: 50%`, `transform: translateY(-50%)` |
+| Left arrow aria-label | `aria-label="Previous slide"` |
+| Right arrow aria-label | `aria-label="Next slide"` |
 | Hover | Background #F5F0E8 |
 | Disabled state | `opacity: 0.35`, `cursor: default`, `pointer-events: none` |
 | Disabled rule | Left arrow disabled on slide index 0; right arrow disabled on last slide index |
@@ -191,8 +193,8 @@ Rationale: Corner SVGs are Editorial-specific (matching the reference implementa
 
 | Property | Value |
 |----------|-------|
-| Container | `div.carousel-dots`, flex row, `gap: 6px`, centered below viewport |
-| Margin | 12px top (below carousel viewport) |
+| Container | `div.carousel-dots`, flex row, `gap: 8px`, centered below viewport |
+| Margin | 8px top (below carousel viewport) |
 | Inactive dot | 6px x 6px circle, background #D0CCC4, border-radius 50% |
 | Active dot | 18px x 6px pill, background #C8A96E, border-radius 3px |
 | Transition | `width 0.3s ease, border-radius 0.3s ease, background 0.3s ease` |
