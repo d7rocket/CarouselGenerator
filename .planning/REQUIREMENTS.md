@@ -31,7 +31,7 @@
 ### Preview
 
 - [x] **PREV-01**: App shows interactive carousel preview of all slides
-- [ ] **PREV-02**: User can navigate between slides (prev/next)
+- [x] **PREV-02**: User can navigate between slides (prev/next)
 - [x] **PREV-03**: Preview accurately reflects the final exported design
 
 ### Export
@@ -83,7 +83,7 @@
 | THEME-02 | Phase 2: Theme Selection & Preview | Complete |
 | THEME-03 | Phase 2: Theme Selection & Preview | Complete |
 | PREV-01 | Phase 2: Theme Selection & Preview | Complete |
-| PREV-02 | Phase 2: Theme Selection & Preview | Pending |
+| PREV-02 | Phase 2: Theme Selection & Preview | Complete |
 | PREV-03 | Phase 2: Theme Selection & Preview | Complete |
 | EXPORT-01 | Phase 3: Export & Copy | Pending |
 | EXPORT-02 | Phase 3: Export & Copy | Pending |
