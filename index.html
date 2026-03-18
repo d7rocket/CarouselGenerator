@@ -783,17 +783,169 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
     runParserTests();
 
     // ========================================
-    // Part 3: Results Rendering
+    // Part 3: Theme & Carousel Helpers
+    // ========================================
+
+    var currentSlide = 0;
+
+    function getSlideType(index, totalSlides) {
+      if (index === 0) return 'cover';
+      if (index === totalSlides - 1) return 'cta';
+      return 'body';
+    }
+
+    function createCornerSVG(className) {
+      var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', className);
+      svg.setAttribute('viewBox', '0 0 48 48');
+      svg.setAttribute('fill', 'none');
+      svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+      var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M0 0 L48 0 L48 4 L4 4 L4 48 L0 48 Z');
+      path.setAttribute('fill', '#C8A96E');
+      path.setAttribute('opacity', '0.35');
+      svg.appendChild(path);
+      var circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', '4');
+      circle.setAttribute('cy', '4');
+      circle.setAttribute('r', '3');
+      circle.setAttribute('fill', '#C8A96E');
+      circle.setAttribute('opacity', '0.55');
+      svg.appendChild(circle);
+      return svg;
+    }
+
+    function buildSlideDOM(slide, index, totalSlides, field) {
+      var type = getSlideType(index, totalSlides);
+      var frame = document.createElement('div');
+      frame.className = 'slide-frame' + (index === 0 ? ' active' : '');
+      frame.setAttribute('data-slide-index', index);
+
+      // Corner SVGs (always in DOM, CSS hides for non-editorial)
+      frame.appendChild(createCornerSVG('slide-corner-tl'));
+      frame.appendChild(createCornerSVG('slide-corner-br'));
+
+      // Top row: field badge + slide counter
+      var topRow = document.createElement('div');
+      topRow.className = 'slide-top-row';
+      var badge = document.createElement('span');
+      badge.className = 'slide-badge';
+      badge.textContent = field || 'Science Drop';
+      topRow.appendChild(badge);
+      var num = document.createElement('span');
+      num.className = 'slide-num';
+      num.textContent = String(index + 1).padStart(2, '0') + ' \u2014 ' + String(totalSlides).padStart(2, '0');
+      topRow.appendChild(num);
+      frame.appendChild(topRow);
+
+      // Body area
+      var body = document.createElement('div');
+      body.className = 'slide-body slide-type-' + type;
+      var title = document.createElement('div');
+      title.className = 'slide-title';
+      title.textContent = slide.title;
+      body.appendChild(title);
+
+      // Accent rule
+      var rule = document.createElement('div');
+      rule.className = 'slide-accent-rule';
+      body.appendChild(rule);
+
+      // Content based on slide type
+      if (type === 'body') {
+        var text = document.createElement('div');
+        text.className = 'slide-text';
+        text.textContent = slide.body;
+        body.appendChild(text);
+      } else if (type === 'cta') {
+        var cta = document.createElement('div');
+        cta.className = 'slide-cta-text';
+        cta.textContent = slide.body || 'Follow for daily science drops.';
+        body.appendChild(cta);
+      } else if (type === 'cover') {
+        var hookText = document.createElement('div');
+        hookText.className = 'slide-text';
+        hookText.textContent = slide.body;
+        body.appendChild(hookText);
+      }
+
+      frame.appendChild(body);
+      return frame;
+    }
+
+    function buildThemePicker(container, onSelect) {
+      var themes = [
+        { id: 'editorial', name: 'Editorial', bg: '#FAF8F4', accent: '#C8A96E' },
+        { id: 'nature', name: 'Nature', bg: '#F2F5EE', accent: '#6A8A5A' },
+        { id: 'deep-space', name: 'Deep Space', bg: '#0E0F14', accent: '#4A9EFF' },
+        { id: 'minimal', name: 'Minimal', bg: '#FFFFFF', accent: '#1A1A1A' },
+        { id: 'sunset', name: 'Sunset', bg: '#FBF3E8', accent: '#C4602A' },
+        { id: 'ocean', name: 'Ocean', bg: '#F0F4F7', accent: '#2A8A8A' },
+        { id: 'botanical-dark', name: 'Botanical Dark', bg: '#0D1F0F', accent: '#D4C9A8' },
+        { id: 'tech', name: 'Tech', bg: '#111418', accent: '#00D4AA' }
+      ];
+
+      var row = document.createElement('div');
+      row.className = 'theme-picker-row';
+
+      themes.forEach(function(theme) {
+        var swatch = document.createElement('button');
+        swatch.className = 'theme-swatch';
+        if (theme.id === 'editorial') {
+          swatch.className += ' selected';
+        }
+        swatch.setAttribute('data-theme-id', theme.id);
+
+        // Two-color strip container
+        var stripContainer = document.createElement('div');
+        stripContainer.style.display = 'flex';
+        stripContainer.style.width = '48px';
+        stripContainer.style.height = '32px';
+
+        var leftHalf = document.createElement('div');
+        leftHalf.className = 'swatch-half';
+        leftHalf.style.backgroundColor = theme.bg;
+        var rightHalf = document.createElement('div');
+        rightHalf.className = 'swatch-half';
+        rightHalf.style.backgroundColor = theme.accent;
+        stripContainer.appendChild(leftHalf);
+        stripContainer.appendChild(rightHalf);
+        swatch.appendChild(stripContainer);
+
+        // Theme name label
+        var label = document.createElement('span');
+        label.className = 'swatch-label';
+        label.textContent = theme.name;
+        swatch.appendChild(label);
+
+        swatch.addEventListener('click', function() {
+          onSelect(theme.id);
+          // Update selected state on all swatches
+          var allSwatches = row.querySelectorAll('.theme-swatch');
+          allSwatches.forEach(function(s) {
+            s.classList.remove('selected');
+          });
+          swatch.classList.add('selected');
+        });
+
+        row.appendChild(swatch);
+      });
+
+      container.appendChild(row);
+    }
+
+    // ========================================
+    // Part 4: Results Rendering (Phase 2 Carousel)
     // ========================================
     function renderResults(parsed, filename) {
       uploadZone.style.display = 'none';
-      const results = document.getElementById('results');
+      var results = document.getElementById('results');
       results.style.display = 'block';
-
-      // Build DOM safely using createElement/textContent
       results.textContent = '';
 
-      // Header row
+      currentSlide = 0;
+
+      // (a) Header row
       var header = document.createElement('div');
       header.className = 'results-header';
       var pill = document.createElement('span');
@@ -812,78 +964,32 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       header.appendChild(newBtn);
       results.appendChild(header);
 
-      // Metadata row
-      var metaRow = document.createElement('div');
-      metaRow.className = 'metadata-row';
-      if (parsed.date) {
-        var dateItem = document.createElement('div');
-        dateItem.className = 'meta-item';
-        var dateLabel = document.createElement('span');
-        dateLabel.className = 'meta-label';
-        dateLabel.textContent = 'Date';
-        dateItem.appendChild(dateLabel);
-        var dateVal = document.createTextNode(' ' + parsed.date);
-        dateItem.appendChild(dateVal);
-        metaRow.appendChild(dateItem);
-        var div1 = document.createElement('div');
-        div1.className = 'meta-divider';
-        metaRow.appendChild(div1);
-      }
-      if (parsed.field) {
-        var fieldItem = document.createElement('div');
-        fieldItem.className = 'meta-item';
-        var fieldLabel = document.createElement('span');
-        fieldLabel.className = 'meta-label';
-        fieldLabel.textContent = 'Field';
-        fieldItem.appendChild(fieldLabel);
-        var fieldVal = document.createTextNode(' ' + parsed.field);
-        fieldItem.appendChild(fieldVal);
-        metaRow.appendChild(fieldItem);
-        var div2 = document.createElement('div');
-        div2.className = 'meta-divider';
-        metaRow.appendChild(div2);
-      }
-      var srcItem = document.createElement('div');
-      srcItem.className = 'meta-item';
-      var srcLabel = document.createElement('span');
-      srcLabel.className = 'meta-label';
-      srcLabel.textContent = 'Sources';
-      srcItem.appendChild(srcLabel);
-      var srcVal = document.createTextNode(' ' + parsed.sourcesCount);
-      srcItem.appendChild(srcVal);
-      metaRow.appendChild(srcItem);
-      results.appendChild(metaRow);
+      // (b) Theme picker row
+      var slideCanvas = document.createElement('div');
+      slideCanvas.className = 'slide-canvas';
+      slideCanvas.setAttribute('data-theme', 'editorial');
 
-      // Slides section heading
-      var slidesHeading = document.createElement('div');
-      slidesHeading.className = 'section-heading';
-      slidesHeading.textContent = 'Slides ';
-      var slidesCount = document.createElement('span');
-      slidesCount.className = 'count';
-      slidesCount.textContent = '(' + parsed.slides.length + ')';
-      slidesHeading.appendChild(slidesCount);
-      results.appendChild(slidesHeading);
-
-      // Slide cards
-      parsed.slides.forEach(function(slide) {
-        var card = document.createElement('div');
-        card.className = 'slide-card';
-        var badge = document.createElement('div');
-        badge.className = 'slide-number-badge';
-        badge.textContent = 'Slide ' + slide.number;
-        card.appendChild(badge);
-        var cardTitle = document.createElement('div');
-        cardTitle.className = 'slide-card-title';
-        cardTitle.textContent = slide.title;
-        card.appendChild(cardTitle);
-        var cardBody = document.createElement('div');
-        cardBody.className = 'slide-card-body';
-        cardBody.textContent = slide.body;
-        card.appendChild(cardBody);
-        results.appendChild(card);
+      buildThemePicker(results, function(themeId) {
+        slideCanvas.setAttribute('data-theme', themeId);
       });
 
-      // Caption section
+      // (c) Carousel container
+      var carouselContainer = document.createElement('div');
+      carouselContainer.className = 'carousel-container';
+      var viewport = document.createElement('div');
+      viewport.className = 'carousel-viewport';
+      viewport.appendChild(slideCanvas);
+
+      // Build slides
+      parsed.slides.forEach(function(slide, index) {
+        var slideFrame = buildSlideDOM(slide, index, parsed.slides.length, parsed.field);
+        slideCanvas.appendChild(slideFrame);
+      });
+
+      carouselContainer.appendChild(viewport);
+      results.appendChild(carouselContainer);
+
+      // (d) Caption section
       if (parsed.caption) {
         var capHeading = document.createElement('div');
         capHeading.className = 'section-heading';
@@ -891,7 +997,6 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
         results.appendChild(capHeading);
         var capBlock = document.createElement('div');
         capBlock.className = 'caption-block';
-        // Preserve line breaks in caption
         parsed.caption.split('\n').forEach(function(line, idx) {
           if (idx > 0) capBlock.appendChild(document.createElement('br'));
           capBlock.appendChild(document.createTextNode(line));
@@ -899,7 +1004,7 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
         results.appendChild(capBlock);
       }
 
-      // Hashtags section
+      // (e) Hashtags section
       if (parsed.hashtags.length > 0) {
         var tagHeading = document.createElement('div');
         tagHeading.className = 'section-heading';
