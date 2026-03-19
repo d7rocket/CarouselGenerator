@@ -1043,9 +1043,65 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       return errors;
     }
 
+    // ========================================
+    // Export Tests (auto-run on page load)
+    // ========================================
+    function runExportTests() {
+      var errors = [];
+
+      // Test 1: html2canvas CDN loaded
+      if (typeof html2canvas !== 'function')
+        errors.push('html2canvas not loaded (typeof=' + typeof html2canvas + ')');
+
+      // Test 2: JSZip CDN loaded
+      if (typeof JSZip !== 'function')
+        errors.push('JSZip not loaded (typeof=' + typeof JSZip + ')');
+
+      // Test 3: makeTopicSlug normal case
+      if (makeTopicSlug('Materials Science') !== 'materials-science')
+        errors.push('makeTopicSlug("Materials Science") should return "materials-science", got "' + makeTopicSlug('Materials Science') + '"');
+
+      // Test 4: makeTopicSlug fallback
+      if (makeTopicSlug('') !== 'carousel')
+        errors.push('makeTopicSlug("") should return "carousel", got "' + makeTopicSlug('') + '"');
+
+      // Test 5: padIndex(0) -> '01'
+      if (padIndex(0) !== '01')
+        errors.push('padIndex(0) should return "01", got "' + padIndex(0) + '"');
+
+      // Test 6: padIndex(9) -> '10'
+      if (padIndex(9) !== '10')
+        errors.push('padIndex(9) should return "10", got "' + padIndex(9) + '"');
+
+      // Test 7-9: DOM elements exist after render
+      var testMarkdown = '# Test\n\n**Date:** 2026-01-01 | **Field:** Test | **Sources:** 0\n\n---\n\n## Slide 1: Cover\n\nBody.\n\n## Slide 2: End\n\nCTA.';
+      var parsed = parseMarkdown(testMarkdown);
+      renderResults(parsed, 'export-test.md');
+
+      if (!document.querySelector('.export-bar'))
+        errors.push('Export bar not found in DOM');
+      if (!document.querySelector('.export-btn-primary'))
+        errors.push('Primary export button not found');
+      if (!document.querySelector('.export-btn-secondary'))
+        errors.push('Secondary export button not found');
+
+      // Clean up
+      var uploadNew = document.querySelector('.upload-new-link');
+      if (uploadNew) uploadNew.click();
+
+      if (errors.length === 0) {
+        console.log('EXPORT TESTS: ALL PASSED (9 checks)');
+      } else {
+        console.error('EXPORT TESTS FAILED:');
+        errors.forEach(function(e) { console.error('  - ' + e); });
+      }
+      return errors;
+    }
+
     // Auto-run parser tests on page load
     runParserTests();
     runCarouselTests();
+    runExportTests();
 
     // ========================================
     // Part 3: Theme & Carousel Helpers
@@ -1419,6 +1475,96 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       };
       document.addEventListener('keydown', keyHandler);
       activeKeyHandler = keyHandler;
+
+      // (c3) Export click handlers
+      function renderSlideToBlob(slideIndex) {
+        return new Promise(function(resolve, reject) {
+          var clone = slideCanvas.cloneNode(true);
+          clone.style.transform = 'none';
+          clone.style.position = 'absolute';
+          clone.style.left = '-9999px';
+          clone.style.top = '0';
+          clone.style.width = '1080px';
+          clone.style.height = '1080px';
+
+          var cloneFrames = clone.querySelectorAll('.slide-frame');
+          for (var ci = 0; ci < cloneFrames.length; ci++) {
+            if (ci === slideIndex) {
+              cloneFrames[ci].style.display = 'block';
+              cloneFrames[ci].classList.add('active');
+            } else {
+              cloneFrames[ci].style.display = 'none';
+              cloneFrames[ci].classList.remove('active');
+            }
+          }
+
+          document.body.appendChild(clone);
+
+          html2canvas(clone, { width: 1080, height: 1080, scale: 1, useCORS: true, logging: false }).then(function(canvas) {
+            canvas.toBlob(function(blob) {
+              document.body.removeChild(clone);
+              resolve(blob);
+            }, 'image/png');
+          }).catch(function(err) {
+            if (clone.parentNode) document.body.removeChild(clone);
+            reject(err);
+          });
+        });
+      }
+
+      // Single slide download
+      singleBtn.addEventListener('click', function() {
+        setExportLoading(singleBtn, true);
+        renderSlideToBlob(currentSlide).then(function(blob) {
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = makeTopicSlug(parsed.field) + '-slide-' + padIndex(currentSlide) + '.png';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          setExportLoading(singleBtn, false);
+        }).catch(function(err) {
+          alert('Export failed. Try reloading the page.');
+          setExportLoading(singleBtn, false);
+        });
+      });
+
+      // ZIP download (all slides)
+      zipBtn.addEventListener('click', function() {
+        setExportLoading(zipBtn, true);
+        var zip = new JSZip();
+        var slug = makeTopicSlug(parsed.field);
+        var chain = Promise.resolve();
+
+        for (var si = 0; si < totalSlides; si++) {
+          (function(idx) {
+            chain = chain.then(function() {
+              return renderSlideToBlob(idx).then(function(blob) {
+                zip.file(slug + '-slide-' + padIndex(idx) + '.png', blob);
+              });
+            });
+          })(si);
+        }
+
+        chain.then(function() {
+          return zip.generateAsync({ type: 'blob' });
+        }).then(function(content) {
+          var url = URL.createObjectURL(content);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = slug + '-carousel.zip';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          setExportLoading(zipBtn, false);
+        }).catch(function(err) {
+          alert('Export failed. Try reloading the page.');
+          setExportLoading(zipBtn, false);
+        });
+      });
 
       // (d) Caption section
       if (parsed.caption) {
