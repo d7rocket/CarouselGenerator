@@ -181,6 +181,7 @@
     }
 
     /* Caption */
+    .caption-block, .hashtags-container { position: relative; }
     .caption-block {
       border-left: 3px solid #C8A96E;
       padding: 0.75rem 1rem;
@@ -197,6 +198,26 @@
       flex-wrap: wrap;
       gap: 0.5rem;
     }
+
+    /* Copy-to-clipboard button */
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(255,255,255,0.8);
+      border: 1px solid #E0DCD4;
+      border-radius: 6px;
+      padding: 0.35rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, border-color 0.2s;
+      width: 28px;
+      height: 28px;
+    }
+    .copy-btn:hover { background: #F5F0E8; border-color: #C8A96E; }
+    .copy-btn svg { width: 14px; height: 14px; }
 
     .hashtag-pill {
       background: #F5F0E8;
@@ -1098,10 +1119,59 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       return errors;
     }
 
+    // ========================================
+    // Copy Tests (auto-run on page load)
+    // ========================================
+    function runCopyTests() {
+      var errors = [];
+
+      // Test 1: createCopyButton is a function
+      if (typeof createCopyButton !== 'function')
+        errors.push('createCopyButton is not a function');
+
+      // Test 2-5: Render results and check copy buttons
+      var testMarkdown = '# Test\n\n**Date:** 2026-01-01 | **Field:** Test | **Sources:** 0\n\n---\n\n## Slide 1: Cover\n\nBody.\n\n## Slide 2: End\n\nCTA.';
+      var parsed = parseMarkdown(testMarkdown);
+      renderResults(parsed, 'copy-test.md');
+
+      // Test 2: Two copy buttons exist
+      var copyBtns = document.querySelectorAll('.copy-btn');
+      if (copyBtns.length !== 2)
+        errors.push('Expected 2 .copy-btn elements, found ' + copyBtns.length);
+
+      // Test 3-4: Each copy-btn contains exactly 2 SVG elements
+      copyBtns.forEach(function(btn, i) {
+        var svgs = btn.querySelectorAll('svg');
+        if (svgs.length !== 2)
+          errors.push('copy-btn[' + i + '] expected 2 SVGs, found ' + svgs.length);
+
+        // Test: First SVG visible (clipboard icon)
+        if (svgs.length >= 1 && svgs[0].style.display === 'none')
+          errors.push('copy-btn[' + i + '] first SVG (clipboard) should be visible');
+
+        // Test: Second SVG hidden (checkmark icon)
+        if (svgs.length >= 2 && svgs[1].style.display !== 'none')
+          errors.push('copy-btn[' + i + '] second SVG (checkmark) should be hidden');
+      });
+
+      // Clean up
+      var uploadNew = document.querySelector('.upload-new-link');
+      if (uploadNew) uploadNew.click();
+
+      if (errors.length === 0) {
+        console.log('COPY TESTS: ALL PASSED (5 checks)');
+      } else {
+        console.error('COPY TESTS FAILED:');
+        errors.forEach(function(e) { console.error('  - ' + e); });
+      }
+      return errors;
+    }
+
     // Auto-run parser tests on page load
     runParserTests();
     runCarouselTests();
     runExportTests();
+    runCopyTests();
 
     // ========================================
     // Part 3: Theme & Carousel Helpers
@@ -1285,6 +1355,68 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
         while (btn.firstChild) btn.removeChild(btn.firstChild);
         btn.appendChild(document.createTextNode(btn._originalText || ''));
       }
+    }
+
+    // ========================================
+    // Part 3c: Copy-to-Clipboard Helper (COPY-01, COPY-02)
+    // ========================================
+    function createCopyButton(textToCopy) {
+      var btn = document.createElement('button');
+      btn.className = 'copy-btn';
+      btn.setAttribute('aria-label', 'Copy to clipboard');
+
+      // Clipboard icon SVG
+      var clipboardSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      clipboardSvg.setAttribute('viewBox', '0 0 16 16');
+      var clipPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      clipPath.setAttribute('d', 'M5 2H4a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-1');
+      clipPath.setAttribute('stroke', '#6B6560');
+      clipPath.setAttribute('stroke-width', '1.5');
+      clipPath.setAttribute('fill', 'none');
+      clipPath.setAttribute('stroke-linecap', 'round');
+      clipPath.setAttribute('stroke-linejoin', 'round');
+      clipboardSvg.appendChild(clipPath);
+      var clipRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      clipRect.setAttribute('x', '5');
+      clipRect.setAttribute('y', '1');
+      clipRect.setAttribute('width', '6');
+      clipRect.setAttribute('height', '3');
+      clipRect.setAttribute('rx', '1');
+      clipRect.setAttribute('stroke', '#6B6560');
+      clipRect.setAttribute('stroke-width', '1.5');
+      clipRect.setAttribute('fill', 'none');
+      clipboardSvg.appendChild(clipRect);
+
+      // Checkmark icon SVG (hidden initially)
+      var checkSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      checkSvg.setAttribute('viewBox', '0 0 16 16');
+      checkSvg.style.display = 'none';
+      var checkPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      checkPath.setAttribute('d', 'M3 8.5L6.5 12L13 4');
+      checkPath.setAttribute('stroke', '#4A9E4A');
+      checkPath.setAttribute('stroke-width', '2');
+      checkPath.setAttribute('fill', 'none');
+      checkPath.setAttribute('stroke-linecap', 'round');
+      checkPath.setAttribute('stroke-linejoin', 'round');
+      checkSvg.appendChild(checkPath);
+
+      btn.appendChild(clipboardSvg);
+      btn.appendChild(checkSvg);
+
+      btn.addEventListener('click', function() {
+        navigator.clipboard.writeText(textToCopy).then(function() {
+          clipboardSvg.style.display = 'none';
+          checkSvg.style.display = '';
+          setTimeout(function() {
+            clipboardSvg.style.display = '';
+            checkSvg.style.display = 'none';
+          }, 2000);
+        }).catch(function() {
+          // Silent fail -- clipboard API may not be available in all contexts
+        });
+      });
+
+      return btn;
     }
 
     // ========================================
@@ -1578,6 +1710,9 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
           if (idx > 0) capBlock.appendChild(document.createElement('br'));
           capBlock.appendChild(document.createTextNode(line));
         });
+        var capCopyBtn = createCopyButton(parsed.caption);
+        capBlock.appendChild(capCopyBtn);
+        capBlock.style.paddingRight = '2.5rem';
         results.appendChild(capBlock);
       }
 
@@ -1595,6 +1730,10 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
           tagPill.textContent = tag;
           tagContainer.appendChild(tagPill);
         });
+        var hashtagsText = parsed.hashtags.join(' ');
+        var tagCopyBtn = createCopyButton(hashtagsText);
+        tagContainer.appendChild(tagCopyBtn);
+        tagContainer.style.paddingRight = '2.5rem';
         results.appendChild(tagContainer);
       }
     }
