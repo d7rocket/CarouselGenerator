@@ -56,10 +56,11 @@ Plans:
   2. User can download all slides at once as a ZIP file containing correctly named PNGs
   3. Exported PNGs render text crisply with no visual artifacts or missing fonts
   4. User can copy caption text and hashtags to clipboard with a single click each
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
-- [ ] 03-01: TBD
+- [ ] 03-01-PLAN.md — CDN setup (html2canvas + JSZip), export buttons with loading states, single-slide and ZIP download rendering
+- [ ] 03-02-PLAN.md — Copy-to-clipboard buttons for caption and hashtags with icon feedback, plus end-to-end verification
 
 ## Progress
 
@@ -70,4 +71,4 @@ Phases execute in numeric order: 1 -> 2 -> 3
 |-------|----------------|--------|-----------|
 | 1. Markdown Input & Parsing | 0/1 | Planning complete | - |
 | 2. Theme Selection & Preview | 0/2 | Planning complete | - |
-| 3. Export & Copy | 0/? | Not started | - |
+| 3. Export & Copy | 0/2 | Planning complete | - |
