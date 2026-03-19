@@ -430,18 +430,18 @@
       <stop offset="100%" stop-color="#00CFFF" stop-opacity="0"/>
     </radialGradient>
 
-    <!-- Nucleus core gradient -->
-    <radialGradient id="${q('nc')}" cx="30%" cy="30%" r="70%">
-      <stop offset="0%"   stop-color="#80EAFF"/>
-      <stop offset="100%" stop-color="#006BE8"/>
+    <!-- Vignette: transparent centre → dark edge -->
+    <radialGradient id="${q('vig')}" cx="50%" cy="50%" r="50%">
+      <stop offset="55%"  stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.32"/>
     </radialGradient>
 
     <!-- Clip to circle boundary -->
     <clipPath id="${q('cl')}"><circle cx="256" cy="256" r="248"/></clipPath>
 
-    <!-- Arc path for Latin phrase (inner bottom, r=172) -->
+    <!-- Arc path for Latin phrase (tighter bottom arc, r=185) -->
     <!-- Counter-clockwise from left to right = bottom semicircle -->
-    <path id="${q('arc')}" d="M 84,256 A 172,172 0 0,0 428,256"/>
+    <path id="${q('arc')}" d="M 71,256 A 185,185 0 0,0 441,256"/>
   </defs>
 
   <!-- ── Background ── -->
@@ -449,6 +449,8 @@
   <circle cx="256" cy="256" r="248" fill="url(#${q('bg')})"/>
   <!-- Ambient centre glow -->
   <circle cx="256" cy="256" r="148" fill="url(#${q('cg')})"/>
+  <!-- Vignette overlay -->
+  <circle cx="256" cy="256" r="248" fill="url(#${q('vig')})" clip-path="url(#${q('cl')})"/>
 
   <!-- ── Star field ── -->
   <circle cx="108" cy="126" r="0.8" fill="#fff" opacity="0.22"/>
@@ -471,16 +473,13 @@
   ${cardDots}
   <!-- Tick marks -->
   ${ticks}
-  <!-- Inner bezel ring -->
-  <circle cx="256" cy="256" r="218" fill="none" stroke="#C8820A" stroke-width="0.7" opacity="0.28"/>
-
   <!-- ── Orbital ellipses ── -->
   <!-- Orbit 1 — cyan, 0°, CW, 18s -->
   <g>${orb(0, 360, 18)}
     <ellipse cx="256" cy="256" rx="210" ry="65"
              fill="none" stroke="#00CFFF" stroke-width="1.1" opacity="0.22"/>
     <circle cx="466" cy="256" r="5"   fill="#00CFFF" filter="url(#${q('gm')})" opacity="0.90"/>
-    <circle cx="466" cy="256" r="2"   fill="#fff" opacity="0.85"/>
+    <circle cx="466" cy="256" r="2.2" fill="#fff" opacity="0.85"/>
   </g>
 
   <!-- Orbit 2 — violet, 60°, CCW, 26s -->
@@ -489,8 +488,8 @@
     <ellipse cx="256" cy="256" rx="210" ry="65"
              fill="none" stroke="#8B5CF6" stroke-width="1.1" opacity="0.22"
              transform="rotate(60 256 256)"/>
-    <circle cx="361" cy="73"  r="5"   fill="#8B5CF6" filter="url(#${q('gm')})" opacity="0.90"/>
-    <circle cx="361" cy="73"  r="2"   fill="#fff" opacity="0.85"/>
+    <circle cx="361" cy="73"  r="4"   fill="#8B5CF6" filter="url(#${q('gm')})" opacity="0.90"/>
+    <circle cx="361" cy="73"  r="1.8" fill="#fff" opacity="0.85"/>
   </g>
 
   <!-- Orbit 3 — blue, 120°, CW, 36s -->
@@ -499,33 +498,28 @@
     <ellipse cx="256" cy="256" rx="210" ry="65"
              fill="none" stroke="#3B82F6" stroke-width="1.1" opacity="0.22"
              transform="rotate(120 256 256)"/>
-    <circle cx="151" cy="439" r="5"   fill="#3B82F6" filter="url(#${q('gm')})" opacity="0.90"/>
-    <circle cx="151" cy="439" r="2"   fill="#fff" opacity="0.85"/>
+    <circle cx="151" cy="439" r="3.5" fill="#3B82F6" filter="url(#${q('gm')})" opacity="0.90"/>
+    <circle cx="151" cy="439" r="1.5" fill="#fff" opacity="0.85"/>
   </g>
-
-  <!-- ── Nucleus ── -->
-  <circle cx="256" cy="256" r="26"  fill="#00CFFF" opacity="0.06" filter="url(#${q('gx')})"/>
-  <circle cx="256" cy="256" r="6.5" fill="url(#${q('nc')})" filter="url(#${q('gm')})"/>
-  <circle cx="253" cy="253" r="2.5" fill="#fff" opacity="0.72"/>
 
   <!-- ── SiB Mark ── -->
   <!-- Ghost glow layer -->
-  <text x="256" y="232" text-anchor="middle" dominant-baseline="middle"
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="middle"
         font-family="'Cormorant Garamond','Garamond','Times New Roman',serif"
         font-weight="700" font-size="155" letter-spacing="6"
-        fill="#00CFFF" opacity="0.07" filter="url(#${q('gx')})">SiB</text>
+        fill="#C8820A" opacity="0.08" filter="url(#${q('gx')})">SiB</text>
   <!-- Main letterform -->
-  <text x="256" y="232" text-anchor="middle" dominant-baseline="middle"
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="middle"
         font-family="'Cormorant Garamond','Garamond','Times New Roman',serif"
         font-weight="700" font-size="155" letter-spacing="6">
-    <tspan fill="#E8EEFF">S</tspan><tspan fill="#00CFFF" filter="url(#${q('gt')})">i</tspan><tspan fill="#E8EEFF">B</tspan>
+    <tspan fill="#E8EEFF">S</tspan><tspan fill="#C8820A" filter="url(#${q('gt')})">i</tspan><tspan fill="#E8EEFF">B</tspan>
   </text>
 
   <!-- ── Academic divider ── -->
   <!-- Thin gold rule with terminal dots — classical inscription style -->
-  <line x1="178" y1="308" x2="334" y2="308" stroke="#C8820A" stroke-width="0.8" opacity="0.48"/>
-  <circle cx="175" cy="308" r="1.8" fill="#C8820A" opacity="0.55"/>
-  <circle cx="337" cy="308" r="1.8" fill="#C8820A" opacity="0.55"/>
+  <line x1="178" y1="352" x2="334" y2="352" stroke="#C8820A" stroke-width="0.8" opacity="0.48"/>
+  <circle cx="175" cy="352" r="1.8" fill="#C8820A" opacity="0.55"/>
+  <circle cx="337" cy="352" r="1.8" fill="#C8820A" opacity="0.55"/>
 
   <!-- ── Latin phrase (arched along bottom) ── -->
   <text font-family="'Cormorant Garamond','Garamond','Times New Roman',serif"
@@ -622,12 +616,14 @@
     // ─────────────────────────────────────────────────────────────────────────
     // Render all instances
     // ─────────────────────────────────────────────────────────────────────────
-    insertLogo('slot-primary', 420, 'p',  true);
-    insertLogo('slot-512',     200, 'a',  true);
-    insertLogo('slot-256',     140, 'b',  true);
-    insertLogo('slot-128',      80, 'c',  true);
-    insertLogo('slot-64',       48, 'd',  true);
-    insertLogo('slot-dark',    220, 'e',  true);
+    const motion = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    insertLogo('slot-primary', 420, 'p',  motion);
+    insertLogo('slot-512',     200, 'a',  motion);
+    insertLogo('slot-256',     140, 'b',  motion);
+    insertLogo('slot-128',      80, 'c',  motion);
+    insertLogo('slot-64',       48, 'd',  motion);
+    insertLogo('slot-dark',    220, 'e',  motion);
     insertLogo('slot-light',   220, 'f',  false);
     insertLogo('slot-wm',       72, 'g',  false);
   </script>
