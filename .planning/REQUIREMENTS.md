@@ -36,10 +36,10 @@
 
 ### Export
 
-- [ ] **EXPORT-01**: User can download a single slide as a 1080×1080 PNG
-- [ ] **EXPORT-02**: User can download all slides as a ZIP of PNGs
-- [ ] **EXPORT-03**: Exported PNGs are exactly 1080×1080 pixels
-- [ ] **EXPORT-04**: Export quality is print-ready (fonts render crisp, no artifacts)
+- [x] **EXPORT-01**: User can download a single slide as a 1080×1080 PNG
+- [x] **EXPORT-02**: User can download all slides as a ZIP of PNGs
+- [x] **EXPORT-03**: Exported PNGs are exactly 1080×1080 pixels
+- [x] **EXPORT-04**: Export quality is print-ready (fonts render crisp, no artifacts)
 
 ### Copy Utilities
 
@@ -85,10 +85,10 @@
 | PREV-01 | Phase 2: Theme Selection & Preview | Complete |
 | PREV-02 | Phase 2: Theme Selection & Preview | Complete |
 | PREV-03 | Phase 2: Theme Selection & Preview | Complete |
-| EXPORT-01 | Phase 3: Export & Copy | Pending |
-| EXPORT-02 | Phase 3: Export & Copy | Pending |
-| EXPORT-03 | Phase 3: Export & Copy | Pending |
-| EXPORT-04 | Phase 3: Export & Copy | Pending |
+| EXPORT-01 | Phase 3: Export & Copy | Complete |
+| EXPORT-02 | Phase 3: Export & Copy | Complete |
+| EXPORT-03 | Phase 3: Export & Copy | Complete |
+| EXPORT-04 | Phase 3: Export & Copy | Complete |
 | COPY-01 | Phase 3: Export & Copy | Pending |
 | COPY-02 | Phase 3: Export & Copy | Pending |
 
