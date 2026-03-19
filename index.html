@@ -640,7 +640,68 @@
       color: #9E8C6A;
       line-height: 1.3;
     }
+    /* Export buttons */
+    .export-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+    }
+    .export-btn-primary {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      background: #C8A96E;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: opacity 0.2s;
+    }
+    .export-btn-primary:hover { opacity: 0.85; }
+    .export-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .export-btn-secondary {
+      padding: 0.65rem 1rem;
+      background: transparent;
+      color: #4A4540;
+      border: 1.5px solid #D0CCC4;
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 400;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: border-color 0.2s, opacity 0.2s;
+    }
+    .export-btn-secondary:hover { border-color: #C8A96E; }
+    .export-btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .export-spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+    .export-btn-secondary .export-spinner {
+      border: 2px solid rgba(74,69,64,0.3);
+      border-top-color: #4A4540;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -1139,6 +1200,38 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
     }
 
     // ========================================
+    // Part 3b: Export Helpers (EXPORT-01, EXPORT-02)
+    // ========================================
+
+    function makeTopicSlug(field) {
+      var str = (field && field.trim()) ? field : 'carousel';
+      return str.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/-+/g, '-')
+        .replace(/^-|-$/g, '');
+    }
+
+    function padIndex(i) {
+      return (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1);
+    }
+
+    function setExportLoading(btn, isLoading) {
+      if (isLoading) {
+        btn._originalText = btn.textContent;
+        btn.disabled = true;
+        while (btn.firstChild) btn.removeChild(btn.firstChild);
+        var spinner = document.createElement('span');
+        spinner.className = 'export-spinner';
+        btn.appendChild(spinner);
+        btn.appendChild(document.createTextNode('Exporting...'));
+      } else {
+        btn.disabled = false;
+        while (btn.firstChild) btn.removeChild(btn.firstChild);
+        btn.appendChild(document.createTextNode(btn._originalText || ''));
+      }
+    }
+
+    // ========================================
     // Part 4: Results Rendering (Phase 2 Carousel)
     // ========================================
     function renderResults(parsed, filename) {
@@ -1265,6 +1358,22 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       navBar.appendChild(counter);
 
       results.appendChild(navBar);
+
+      // (c2) Export bar
+      var exportBar = document.createElement('div');
+      exportBar.className = 'export-bar';
+
+      var zipBtn = document.createElement('button');
+      zipBtn.className = 'export-btn-primary';
+      zipBtn.appendChild(document.createTextNode('Download all slides as ZIP'));
+
+      var singleBtn = document.createElement('button');
+      singleBtn.className = 'export-btn-secondary';
+      singleBtn.appendChild(document.createTextNode('Download this slide'));
+
+      exportBar.appendChild(zipBtn);
+      exportBar.appendChild(singleBtn);
+      results.appendChild(exportBar);
 
       // goToSlide function
       var slides = slideCanvas.querySelectorAll('.slide-frame');
