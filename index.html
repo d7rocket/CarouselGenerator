@@ -557,6 +557,30 @@
     }
 
     /* ========================================
+       Phase 3: Vector Field Lines
+       ======================================== */
+
+    .slide-field-lines {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px; height: 1080px;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .slide-field-lines > g { display: none; }
+
+    .slide-field-lines path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    .slide-canvas[data-theme="editorial"]      .field-lines-editorial      { display:block; stroke:#C8A96E; stroke-width:2.5; stroke-opacity:0.065; }
+    .slide-canvas[data-theme="nature"]         .field-lines-nature         { display:block; stroke:#6A8A5A; stroke-width:2;   stroke-opacity:0.07;  }
+    .slide-canvas[data-theme="deep-space"]     .field-lines-deep-space     { display:block; stroke:#4A9EFF; stroke-width:2;   stroke-opacity:0.09;  }
+    .slide-canvas[data-theme="sunset"]         .field-lines-sunset         { display:block; stroke:#C4602A; stroke-width:2.5; stroke-opacity:0.055; }
+    .slide-canvas[data-theme="ocean"]          .field-lines-ocean          { display:block; stroke:#2A8A8A; stroke-width:2;   stroke-opacity:0.07;  }
+    .slide-canvas[data-theme="botanical-dark"] .field-lines-botanical-dark { display:block; stroke:#D4C9A8; stroke-width:2;   stroke-opacity:0.08;  }
+    .slide-canvas[data-theme="tech"]           .field-lines-tech           { display:block; stroke:#00D4AA; stroke-width:1.5; stroke-opacity:0.08;  }
+
+    /* ========================================
        Phase 2: Navigation Controls
        ======================================== */
 
@@ -1206,11 +1230,142 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       return svg;
     }
 
+    function buildFieldLines() {
+      var ns = 'http://www.w3.org/2000/svg';
+      var PI = Math.PI;
+
+      // Euler integration: trace a streamline from (x0,y0)
+      function trace(fieldFn, x0, y0, steps, dt) {
+        var pts = [[x0, y0]], x = x0, y = y0;
+        for (var i = 0; i < steps; i++) {
+          if (x < -30 || x > 1110 || y < -30 || y > 1110) break;
+          var v = fieldFn(x, y);
+          var len = Math.sqrt(v[0]*v[0] + v[1]*v[1]) || 1;
+          x += v[0]/len * dt;
+          y += v[1]/len * dt;
+          pts.push([x, y]);
+        }
+        return pts;
+      }
+
+      // Smooth quadratic-bezier path string through points
+      function ptsToD(pts) {
+        if (pts.length < 2) return '';
+        var p = function(n) { return Math.round(n * 10) / 10; };
+        var d = 'M' + p(pts[0][0]) + ',' + p(pts[0][1]);
+        for (var i = 1; i < pts.length - 1; i++) {
+          var mx = (pts[i][0] + pts[i+1][0]) / 2;
+          var my = (pts[i][1] + pts[i+1][1]) / 2;
+          d += ' Q' + p(pts[i][0]) + ',' + p(pts[i][1]) + ' ' + p(mx) + ',' + p(my);
+        }
+        d += ' L' + p(pts[pts.length-1][0]) + ',' + p(pts[pts.length-1][1]);
+        return d;
+      }
+
+      function makeGroup(cls, seeds, fieldFn, steps, dt) {
+        var g = document.createElementNS(ns, 'g');
+        g.setAttribute('class', cls);
+        for (var s = 0; s < seeds.length; s++) {
+          var pts = trace(fieldFn, seeds[s][0], seeds[s][1], steps, dt);
+          var d = ptsToD(pts);
+          if (!d) continue;
+          var path = document.createElementNS(ns, 'path');
+          path.setAttribute('d', d);
+          g.appendChild(path);
+        }
+        return g;
+      }
+
+      var svg = document.createElementNS(ns, 'svg');
+      svg.setAttribute('class', 'slide-field-lines');
+      svg.setAttribute('viewBox', '0 0 1080 1080');
+
+      // Editorial: gentle diagonal drift — long sweeping curves, mostly rightward
+      // Field: F(x,y) = (1, 0.22·sin(y·π/540)) — horizontal with gentle sine undulation
+      svg.appendChild(makeGroup('field-lines-editorial',
+        [[0,80],[0,200],[0,340],[0,480],[0,610],[0,740],[0,870],[0,980]],
+        function(x,y) { return [1, 0.22 * Math.sin(y * PI / 540)]; },
+        130, 10
+      ));
+
+      // Nature: organic wind through grass — sinuous, slightly turbulent
+      // Field: F(x,y) = (0.7+0.5·sin(y/200), 0.4·cos(x/260+y/340))
+      svg.appendChild(makeGroup('field-lines-nature',
+        [[0,100],[0,250],[0,400],[0,550],[0,700],[0,850],[0,970],[100,0],[400,0],[700,0]],
+        function(x,y) { return [0.7 + 0.5*Math.sin(y/200), 0.4*Math.cos(x/260 + y/340)]; },
+        110, 11
+      ));
+
+      // Deep-space: magnetic dipole — field lines from north pole (270,540) to south pole (810,540)
+      // Seeds placed on a small circle around the north pole at 30°–150° intervals
+      var dsSeeds = [];
+      [30,60,90,120,150].forEach(function(a) {
+        var rad = a * PI / 180;
+        dsSeeds.push([270 + 45*Math.cos(rad), 540 - 45*Math.sin(rad)]);
+        dsSeeds.push([270 + 45*Math.cos(rad), 540 + 45*Math.sin(rad)]);
+      });
+      dsSeeds.push([540, 180], [540, 900]);
+      svg.appendChild(makeGroup('field-lines-deep-space', dsSeeds,
+        function(x,y) {
+          var dx1=x-270, dy1=y-540, r1=Math.max(Math.sqrt(dx1*dx1+dy1*dy1), 55);
+          var dx2=x-810, dy2=y-540, r2=Math.max(Math.sqrt(dx2*dx2+dy2*dy2), 55);
+          return [dx1/(r1*r1) - dx2/(r2*r2), dy1/(r1*r1) - dy2/(r2*r2)];
+        },
+        220, 8
+      ));
+
+      // Sunset: horizontal heat shimmer — nearly flat with slow vertical drift
+      // Field: F(x,y) = (1, 0.13·sin(x/255 + y·0.0035))
+      svg.appendChild(makeGroup('field-lines-sunset',
+        [[0,180],[0,310],[0,440],[0,560],[0,680],[0,800],[0,910]],
+        function(x,y) { return [1, 0.13 * Math.sin(x/255 + y*0.0035)]; },
+        130, 9
+      ));
+
+      // Ocean: wave currents — horizontal base with sinusoidal cross-current
+      // Field: F(x,y) = (0.85+0.3·cos(y/150), 0.4·sin(x/190+y/280))
+      svg.appendChild(makeGroup('field-lines-ocean',
+        [[0,90],[0,220],[0,360],[0,500],[0,640],[0,780],[0,910],[0,1010],[200,0],[580,0]],
+        function(x,y) { return [0.85 + 0.3*Math.cos(y/150), 0.4*Math.sin(x/190 + y/280)]; },
+        120, 10
+      ));
+
+      // Botanical-dark: sparse organic tendrils — slow, branching curves
+      // Field: F(x,y) = (0.5+0.6·sin(y/170+x/420), 0.6·cos(x/230)+0.2·sin(y/300))
+      svg.appendChild(makeGroup('field-lines-botanical-dark',
+        [[0,180],[0,440],[0,700],[120,950],[380,0],[700,0]],
+        function(x,y) {
+          return [0.5 + 0.6*Math.sin(y/170 + x/420), 0.6*Math.cos(x/230) + 0.2*Math.sin(y/300)];
+        },
+        110, 11
+      ));
+
+      // Tech: electromagnetic interference — rotating vector field creating moiré-like flow
+      // Field: F(x,y) = (cos(x·π/150+y·π/110), sin(x·π/110−y·π/150))
+      var techSeeds = [];
+      for (var tx = 60; tx < 1080; tx += 240) {
+        for (var ty = 60; ty < 1080; ty += 240) {
+          techSeeds.push([tx, ty]);
+        }
+      }
+      svg.appendChild(makeGroup('field-lines-tech', techSeeds,
+        function(x,y) {
+          return [Math.cos(x*PI/150 + y*PI/110), Math.sin(x*PI/110 - y*PI/150)];
+        },
+        65, 12
+      ));
+
+      return svg;
+    }
+
     function buildSlideDOM(slide, index, totalSlides, field) {
       var type = getSlideType(index, totalSlides);
       var frame = document.createElement('div');
       frame.className = 'slide-frame' + (index === 0 ? ' active' : '');
       frame.setAttribute('data-slide-index', index);
+
+      // Vector field lines (behind all content, z-index: -1)
+      frame.appendChild(buildFieldLines());
 
       // Corner SVGs (always in DOM, CSS hides for non-editorial)
       frame.appendChild(createCornerSVG('slide-corner-tl'));
