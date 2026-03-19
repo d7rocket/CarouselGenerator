@@ -43,8 +43,8 @@
 
 ### Copy Utilities
 
-- [ ] **COPY-01**: User can copy the caption text for the current slide with one click
-- [ ] **COPY-02**: User can copy hashtags with one click
+- [x] **COPY-01**: User can copy the caption text for the current slide with one click
+- [x] **COPY-02**: User can copy hashtags with one click
 
 ## v2 Requirements
 
@@ -89,8 +89,8 @@
 | EXPORT-02 | Phase 3: Export & Copy | Complete |
 | EXPORT-03 | Phase 3: Export & Copy | Complete |
 | EXPORT-04 | Phase 3: Export & Copy | Complete |
-| COPY-01 | Phase 3: Export & Copy | Pending |
-| COPY-02 | Phase 3: Export & Copy | Pending |
+| COPY-01 | Phase 3: Export & Copy | Complete |
+| COPY-02 | Phase 3: Export & Copy | Complete |
 
 **Coverage:**
 - v1 requirements: 18 total
