@@ -1612,7 +1612,6 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
       function renderSlideToBlob(slideIndex) {
         return new Promise(function(resolve, reject) {
           var clone = slideCanvas.cloneNode(true);
-          clone.style.transform = 'none';
           clone.style.position = 'absolute';
           clone.style.left = '-9999px';
           clone.style.top = '0';
@@ -1622,11 +1621,15 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
           var cloneFrames = clone.querySelectorAll('.slide-frame');
           for (var ci = 0; ci < cloneFrames.length; ci++) {
             if (ci === slideIndex) {
-              cloneFrames[ci].style.display = 'block';
-              cloneFrames[ci].classList.add('active');
+              cloneFrames[ci].style.display = 'flex';
+              cloneFrames[ci].style.transform = 'none';
+              cloneFrames[ci].style.opacity = '1';
+              cloneFrames[ci].style.width = '1080px';
+              cloneFrames[ci].style.height = '1080px';
+              cloneFrames[ci].style.top = '0';
+              cloneFrames[ci].style.left = '0';
             } else {
               cloneFrames[ci].style.display = 'none';
-              cloneFrames[ci].classList.remove('active');
             }
           }
 
