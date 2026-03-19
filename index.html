@@ -1635,7 +1635,7 @@ The Sun gives us more energy per hour than all of humanity uses in a year. The c
 
           document.body.appendChild(clone);
 
-          html2canvas(clone, { width: 1080, height: 1080, scale: 1, useCORS: true, logging: false }).then(function(canvas) {
+          html2canvas(clone, { width: 1080, height: 1080, scale: 2, useCORS: true, logging: false }).then(function(canvas) {
             canvas.toBlob(function(blob) {
               document.body.removeChild(clone);
               resolve(blob);
